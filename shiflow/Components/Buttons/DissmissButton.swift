@@ -8,17 +8,20 @@
 import Foundation
 import SwiftUI
 struct DissmissButton: View {
-
+    
     var body: some View {
-        Image(systemName: "xmark")
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .background(.brown)
-            .foregroundStyle(.white)
-            .clipShape(Capsule())
+        Button(action: {
+        }){
+            Image(systemName: "xmark")
+                .padding(10)
+                .background(Color("PrimaryDarkBrown"))
+                .foregroundStyle(.white)
+                .clipShape(Circle())
+                .shadow(radius: 3)
+        }
     }
 }
 
 #Preview {
-    PrimaryButton()
+    DissmissButton()
 }
