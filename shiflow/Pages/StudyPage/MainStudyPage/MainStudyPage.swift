@@ -12,7 +12,7 @@ struct MainStudyPage: View {
     @State var selectedChord = "Am"
     let chords = ["Am", "C", "D", "F", "Em", "G"]
     @Environment(\.dismiss) var dismiss
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 30) {
             HStack {
@@ -28,7 +28,7 @@ struct MainStudyPage: View {
                     .foregroundStyle(.white)
                     .clipShape(Capsule())
                 }
-
+                
                 Picker("Chord", selection: $selectedChord) {
                     ForEach(chords, id: \.self) { chord in
                         Text(chord)
@@ -38,18 +38,18 @@ struct MainStudyPage: View {
                 .frame(width: 650)
             }
             .padding(.horizontal)
-
+            
             HStack(spacing: 22) {
                 ChordCard(
                     imageName: getChordImage(type: "finger"),
                     title: "Finger Position"
                 )
-
+                
                 ChordCard(
                     imageName: getChordImage(type: "exercise"),
                     title: "Finger Push Up Exercise"
                 )
-
+                
                 ChordCard(
                     imageName: getChordImage(type: "strum"),
                     title: "How to Strum"
@@ -57,9 +57,7 @@ struct MainStudyPage: View {
             }
             .frame(maxWidth: .infinity, alignment: .center)
             .padding(.leading, 50)
-
         }
-
     }
 }
 

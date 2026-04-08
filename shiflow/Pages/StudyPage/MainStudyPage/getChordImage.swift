@@ -12,23 +12,23 @@ extension MainStudyPage {
         case ("Am", "finger"): return "am_finger"
         case ("Am", "exercise"): return "am_exercise"
         case ("Am", "strum"): return "am_strum"
-
+            
         case ("C", "finger"): return "c_finger"
         case ("C", "exercise"): return "c_exercise"
         case ("C", "strum"): return "c_strum"
-
+            
         case ("D", "finger"): return "d_finger"
         case ("D", "exercise"): return "d_exercise"
         case ("D", "strum"): return "d_strum"
-
+            
         case ("F", "finger"): return "f_finger"
         case ("F", "exercise"): return "f_exercise"
         case ("F", "strum"): return "f_strum"
-
+            
         case ("Em", "finger"): return "em_finger"
         case ("Em", "exercise"): return "em_exercise"
         case ("Em", "strum"): return "em_strum"
-
+            
         case ("G", "finger"): return "g_finger"
         case ("G", "exercise"): return "g_exercise"
         case ("G", "strum"): return "g_strum"
