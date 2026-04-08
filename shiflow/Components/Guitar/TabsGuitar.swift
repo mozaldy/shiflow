@@ -81,16 +81,8 @@ struct FretCell: View {
 
 
 #Preview {
-    let cm = Chord(name: "C Major", placements: [
-        FingerPlacement(string: .A,  fretNumber: 3, fingerNumber: 3),  // ring on 5th string, 3rd fret
-        FingerPlacement(string: .D,  fretNumber: 2, fingerNumber: 2),  // middle on 4th string, 2nd fret
-        FingerPlacement(string: .G,  fretNumber: 0, fingerNumber: 0),  // open
-        FingerPlacement(string: .B,  fretNumber: 1, fingerNumber: 1),  // index on 2nd string, 1st fret
-        FingerPlacement(string: .e1, fretNumber: 0, fingerNumber: 0),  // open
-        // E6 string is muted (not played)
-    ])
     HStack{
-        TabsGuitar(chord: cm)
-        TabsGuitar(chord: cm)
+        TabsGuitar(chord: cMajor)
+        TabsGuitar(chord: dMajor)
     }
 }
