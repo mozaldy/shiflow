@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TabsGuitar: View {
     var chord: Chord
+    var isActive: Bool
     var stringsCount: Int = 6
     var fretCount: Int = 4
     
@@ -16,26 +17,32 @@ struct TabsGuitar: View {
     var body: some View {
         
         Text(chord.name).padding()
-        VStack(spacing: 0){ // container string
-            
-            ForEach(GuitarString.allCases, id: \.self) { guitarString in
-                HStack(spacing: 0) { // container fret
-                    Text("\(guitarString.rawValue)").foregroundStyle(.white).frame(width: 25, height: 40).background(Color.black)
-                    
-                    ForEach(0..<fretCount, id: \.self) { fret in
-                        let fingerNumber = chord.getFingerNumber(string: guitarString, fret: fret + 1)
-                        FretCell(fingerNumber: fingerNumber, guitarString: guitarString)
+        ZStack{
+            VStack(spacing: 0){ // container string
+                
+                ForEach(GuitarString.allCases, id: \.self) { guitarString in
+                    HStack(spacing: 0) { // container fret
+                        Text("\(guitarString.rawValue)").foregroundStyle(.white).frame(width: 25, height: 40).background(Color.black)
+                        
+                        ForEach(0..<fretCount, id: \.self) { fret in
+                            let fingerNumber = chord.getFingerNumber(string: guitarString, fret: fret + 1)
+                            let isGuitarStringStrummed = chord.isStringStrummed(for: guitarString)
+                            FretCell(fingerNumber: fingerNumber, guitarString: guitarString, isGuitarStringStrummed: isGuitarStringStrummed)
+                        }
                     }
                 }
+                
             }
-        }
             .clipShape(RoundedRectangle(cornerRadius: 12))
+            Rectangle().opacity( isActive ? 0.0 : 0.6)
+        }
     }
 }
 
 struct FretCell: View {
     var fingerNumber: Int?
     var guitarString: GuitarString
+    var isGuitarStringStrummed: Bool
     
     var stringThickness: Double { switch (guitarString) {
     case GuitarString.E6:
@@ -59,7 +66,7 @@ struct FretCell: View {
             
             
             Rectangle()
-                .fill(Color.black)
+                .fill(isGuitarStringStrummed ? Color.black : Color.red)
                 .frame(height: stringThickness)
             
             
@@ -81,8 +88,10 @@ struct FretCell: View {
 
 
 #Preview {
+    
     HStack{
-        TabsGuitar(chord: cMajor)
-        TabsGuitar(chord: dMajor)
+        TabsGuitar(chord: cMajor, isActive: true)
+        TabsGuitar(chord: dMajor, isActive: false)
     }
+    
 }

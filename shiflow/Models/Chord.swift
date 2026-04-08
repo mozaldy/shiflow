@@ -36,10 +36,8 @@ struct Chord {
     }
     
     func isStringStrummed(for string: GuitarString) -> Bool {
-        let matchingElement: FingerPlacement? = placements.first { p in
+        return placements.contains { p in
             p.string == string
         }
-        
-        return matchingElement != nil
     }
 }
