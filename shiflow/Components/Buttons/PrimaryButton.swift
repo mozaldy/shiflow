@@ -21,6 +21,7 @@ struct PrimaryButton: View {
             .bold()
             .opacity(isDisabled ? 0.5 : 1.0)
             .disabled(isDisabled)
+            .shadow(radius: 3)
     }
 }
 

@@ -6,10 +6,17 @@
 //
 
 import SwiftUI
-
+import SwiftUI
 struct BackButton: View {
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Image(systemName: "chevron.backward")
+            .padding(10)
+            .background(Color.primaryDarkBrown)
+            .foregroundStyle(.white)
+            .clipShape(Circle())
+            .bold()
+            .shadow(radius: 3)
     }
 }
 

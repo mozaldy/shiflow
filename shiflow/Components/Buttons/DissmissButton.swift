@@ -11,14 +11,15 @@ struct DissmissButton: View {
 
     var body: some View {
         Image(systemName: "xmark")
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .background(.brown)
+            .padding(10)
+            .background(Color.primaryDarkBrown)
             .foregroundStyle(.white)
-            .clipShape(Capsule())
+            .clipShape(Circle())
+            .bold()
+            .shadow(radius: 3)
     }
 }
 
 #Preview {
-    PrimaryButton()
+    DissmissButton()
 }
