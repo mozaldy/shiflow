@@ -5,43 +5,71 @@
 //  Created by Theressa Natasha Thebez on 08/04/26.
 //
 
-//
-//  MainStudyPage.swift
-//  shiflow
-//
-//  Created by Theressa Natasha Thebez on 08/04/26.
-//
-
 import Foundation
 import SwiftUI
 
-struct PushUpPage: View {
+struct PushUpScreen: View {
+    @Binding var path: NavigationPath
     var title: String
-    @Environment(\.dismiss) var dismiss
+    @State private var showExitDialog = false
 
     var body: some View {
-        VStack(spacing: 20) {
-            Text(title)
-                .font(.largeTitle)
-                .bold()
-            
-            Text("Detail content for \(title)")
-                .foregroundStyle(.secondary)
+        VStack {
+            VStack(spacing: 10) {
+
+                Text(title)
+                    .font(.largeTitle)
+                    .bold()
+
+                Text("Detail content for \(title)")
+                    .foregroundStyle(.secondary)
+            }
+            .padding(.top)
+
+            Spacer()
+
+            HStack {
+                Spacer()
+                Button {
+                    path.append("strum")
+                } label: {
+                    Text("Next")
+                        .font(.headline)
+                        .padding(.horizontal, 30)
+                        .padding(.vertical, 12)
+                        .background(Color.brown)
+                        .foregroundStyle(.white)
+                        .clipShape(Capsule())
+                }
+            }
         }
         .padding()
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button {
-                    dismiss()
+                    showExitDialog = true
                 } label: {
                     Image(systemName: "xmark")
                 }
             }
         }
+        .exitDialog(
+            isPresented: $showExitDialog,
+            onExit: {
+                showExitDialog = false
+                path.append("study")
+            },
+            onCancel: {
+                showExitDialog = false
+            }
+        )
     }
 }
 
 #Preview {
-    PushUpPage(title: "Finger Push Up")
+    PushUpScreen(
+        path: .constant(NavigationPath()),
+        title: "Finger Push Up"
+    )
 }

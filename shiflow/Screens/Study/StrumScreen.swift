@@ -8,33 +8,61 @@
 import Foundation
 import SwiftUI
 
-struct StrumPage: View {
+struct StrumScreen: View {
+    @Binding var path: NavigationPath
     var title: String
-    @Environment(\.dismiss) var dismiss
+    @State private var showExitDialog = false
 
     var body: some View {
-        VStack(spacing: 20) {
-            Text(title)
-                .font(.largeTitle)
-                .bold()
-            
-            Text("Detail content for \(title)")
-                .foregroundStyle(.secondary)
-        }
-        .padding()
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
+        VStack {
+            VStack(spacing: 10) {
+
+                Text(title)
+                    .font(.largeTitle)
+                    .bold()
+
+                Text("Detail content for \(title)")
+                    .foregroundStyle(.secondary)
+            }
+            .padding(.top)
+
+            Spacer()
+
+            HStack {
+                Spacer()
                 Button {
-                    dismiss()
+                    path.append("study")
                 } label: {
-                    Image(systemName: "xmark")
+                    Text("Done")
+                        .font(.headline)
+                        .padding(.horizontal, 30)
+                        .padding(.vertical, 12)
+                        .background(Color.brown)
+                        .foregroundStyle(.white)
+                        .clipShape(Capsule())
                 }
             }
         }
+        .padding()
+        .navigationBarBackButtonHidden(true)
+        .exitDialog(
+            isPresented: $showExitDialog,
+            onExit: {
+                showExitDialog = false
+                path.append("study")
+            },
+            onCancel: {
+                showExitDialog = false
+            }
+        )
     }
 }
 
 #Preview {
-    StrumPage(title: "How to Strum")
+    StrumScreen(
+        path: .constant(
+            NavigationPath()
+        ),
+        title: "How to Strum"
+    )
 }

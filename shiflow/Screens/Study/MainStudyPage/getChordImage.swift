@@ -5,7 +5,7 @@
 //  Created by Theressa Natasha Thebez on 08/04/26.
 //
 
-extension MainStudyPage {
+extension MainStudyScreen {
     
     func getChordImage(type: String) -> String {
         switch (selectedChord, type) {

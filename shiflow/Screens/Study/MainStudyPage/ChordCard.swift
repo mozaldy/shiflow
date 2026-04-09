@@ -7,30 +7,28 @@
 
 import SwiftUI
 
-struct ChordCard <Destination: View> : View {
+struct ChordCard: View {
     var imageName: String
     var title: String
-    var destination: Destination
-    
+    var action: () -> Void
+
     var body: some View {
-        NavigationLink {
-            destination
-        } label: {
-            VStack(alignment: .center, spacing: 8) {
-                Image(imageName)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 200, height: 200)
-                    .background(Color.primaryDarkBrown)
-                    .cornerRadius(8)
-                
-                Text(title)
-                    .font(.subheadline)
-                    .multilineTextAlignment(.center)
+        Button(action: action) {
+            VStack(spacing: 8) {
+                VStack(alignment: .center, spacing: 8) {
+                    Image(imageName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 190, height: 190)
+                        .background(Color.primaryDarkBrown)
+                        .cornerRadius(8)
+
+                    Text(title)
+                        .font(.subheadline)
+                        .multilineTextAlignment(.center)
+                }
             }
+
         }
-        
     }
 }
-
-
