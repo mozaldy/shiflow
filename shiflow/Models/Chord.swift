@@ -25,7 +25,9 @@ struct FingerPlacement {
 
 struct Chord {
     var name: String
+    var id: String
     var placements: [FingerPlacement]
+    var chordPairs: [String] = [] // Changed from [Chord] to [String] to avoid circular references
     
     func getFingerNumber(string: GuitarString, fret: Int) -> Int? {
         let matchingElement: FingerPlacement? = placements.first { p in
