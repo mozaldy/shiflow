@@ -15,12 +15,14 @@ struct TabsGuitar: View {
     
     var body: some View {
         
-        Text(chord.name).padding()
-        VStack(spacing: 0){ // container string
+        VStack(){
             
+            Text(chord.name).padding()
+        VStack(spacing: 0){ // container string
+
             ForEach(GuitarString.allCases, id: \.self) { guitarString in
                 HStack(spacing: 0) { // container fret
-                    Text("\(guitarString.rawValue)").foregroundStyle(.white).frame(width: 25, height: 40).background(Color.black)
+                    Text("\(guitarString.rawValue)").foregroundStyle(.white).frame(width: 25, height: 40).background(.primaryDarkBrown)
                     
                     ForEach(0..<fretCount, id: \.self) { fret in
                         let fingerNumber = chord.getFingerNumber(string: guitarString, fret: fret + 1)
@@ -34,8 +36,10 @@ struct TabsGuitar: View {
         .overlay {
             Rectangle().opacity( isActive ? 0.0 : 0.6)
         }
+        .background(.primaryLightBrown)
         .clipShape(RoundedRectangle(cornerRadius: 12)).frame(width: 300)
-        
+        }
+
     }
 }
 
@@ -62,8 +66,15 @@ struct FretCell: View {
     
     var body: some View {
         ZStack {
-            Color.blue.opacity(0.2)
+            Rectangle()
+                .fill(.primaryDarkBrown)
+                    .frame(width: 2)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
             
+            Rectangle()
+                .fill(.primaryDarkBrown)
+                    .frame(width: 2)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             
             Rectangle()
                 .fill(isGuitarStringStrummed ? Color.black : Color.red)
@@ -82,7 +93,7 @@ struct FretCell: View {
                 }
             }
         }
-        .frame(height: 40)
+        .frame(width: 60, height: 40)
     }
 }
 
