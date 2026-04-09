@@ -10,32 +10,32 @@ import SwiftUI
 struct TabsGuitar: View {
     var chord: Chord
     var isActive: Bool
-    var stringsCount: Int = 6
     var fretCount: Int = 4
     
     
     var body: some View {
         
         Text(chord.name).padding()
-        ZStack{
-            VStack(spacing: 0){ // container string
-                
-                ForEach(GuitarString.allCases, id: \.self) { guitarString in
-                    HStack(spacing: 0) { // container fret
-                        Text("\(guitarString.rawValue)").foregroundStyle(.white).frame(width: 25, height: 40).background(Color.black)
-                        
-                        ForEach(0..<fretCount, id: \.self) { fret in
-                            let fingerNumber = chord.getFingerNumber(string: guitarString, fret: fret + 1)
-                            let isGuitarStringStrummed = chord.isStringStrummed(for: guitarString)
-                            FretCell(fingerNumber: fingerNumber, guitarString: guitarString, isGuitarStringStrummed: isGuitarStringStrummed)
-                        }
+        VStack(spacing: 0){ // container string
+            
+            ForEach(GuitarString.allCases, id: \.self) { guitarString in
+                HStack(spacing: 0) { // container fret
+                    Text("\(guitarString.rawValue)").foregroundStyle(.white).frame(width: 25, height: 40).background(Color.black)
+                    
+                    ForEach(0..<fretCount, id: \.self) { fret in
+                        let fingerNumber = chord.getFingerNumber(string: guitarString, fret: fret + 1)
+                        let isGuitarStringStrummed = chord.isStringStrummed(for: guitarString)
+                        FretCell(fingerNumber: fingerNumber, guitarString: guitarString, isGuitarStringStrummed: isGuitarStringStrummed)
                     }
                 }
-                
             }
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            
+        }
+        .overlay {
             Rectangle().opacity( isActive ? 0.0 : 0.6)
         }
+        .clipShape(RoundedRectangle(cornerRadius: 12)).frame(width: 300)
+        
     }
 }
 
@@ -82,7 +82,7 @@ struct FretCell: View {
                 }
             }
         }
-        .frame(width: 60, height: 40)
+        .frame(height: 40)
     }
 }
 
@@ -90,7 +90,7 @@ struct FretCell: View {
 #Preview {
     
     HStack{
-        TabsGuitar(chord: cMajor, isActive: true)
+        TabsGuitar(chord: aMinor, isActive: true)
         TabsGuitar(chord: dMajor, isActive: false)
     }
     
