@@ -12,7 +12,7 @@ struct StrumGuitar: View {
     var isActive: Bool
     var strumTrigger: Int
 
-    @State private var isDownStrum: Bool = true
+    var isDownStrum: Bool = true
 
     var body: some View {
         VStack(spacing: 0) {

@@ -8,20 +8,78 @@
 import SwiftUI
 
 struct FingerRapidFireScreen: View {
+    @StateObject private var beat = BeatTimer(bpm: 80)
+
+    @State private var strumTriggerA: Int = 0
+    @State private var strumTriggerB: Int = 0
+
+    let chordA = aMinor
+    let chordB = dMajor
+
+    private let beatsPerBar: Int = 4
+
+    private var barIndex: Int {
+        (beat.beatCount - 1) / beatsPerBar
+    }
+
+    private var isChordAActive: Bool {
+        barIndex % 2 == 0
+    }
+
+    private var beatInBar: Int {
+        ((beat.beatCount - 1) % beatsPerBar) + 1
+    }
+
+    private var isFirstBeatOfBar: Bool {
+        beatInBar == 1
+    }
+
     var body: some View {
         PracticeScreenLayout(activeTab: .rapidFire) {
-            HStack {
-                VStack {
-                    TabsGuitar(chord: aMinor, isActive: true)
-                        .environment(\.guitarSize, .small)
-                    StrumGuitar(chord: aMinor, isActive: true, strumTrigger: 0)
-                        .environment(\.guitarSize, .small)
+            VStack {
+
+                HStack(spacing: 0) {
+                    // Chord A column
+                    VStack(spacing: 8) {
+                        Text(chordA.name)
+                            .font(.subheadline)
+                            .foregroundStyle(isChordAActive ? .primaryDarkBrown : .primaryLightBrown)
+                        TabsGuitar(chord: chordA, isActive: isChordAActive)
+                        StrumGuitar(chord: chordA, isActive: isChordAActive, strumTrigger: strumTriggerA, isDownStrum: barIndex % 2 == 0)
+                    }
+
+                    
+                    VStack {
+                    BeatIndicator(currentBeat: beatInBar, totalBeats: beatsPerBar, isPlaying: beat.isPlaying)
+                    
+                    BPMControls(beat: beat)
+                    }
+                    // Chord B column
+                    VStack(spacing: 8) {
+                        Text(chordB.name)
+                            .font(.subheadline)
+                            .foregroundStyle(!isChordAActive ? .primaryDarkBrown : .primaryLightBrown)
+                        TabsGuitar(chord: chordB, isActive: !isChordAActive)
+                        StrumGuitar(chord: chordB, isActive: !isChordAActive, strumTrigger: strumTriggerB, isDownStrum: barIndex % 2 == 0)
+                    }
                 }
-                VStack {
-                    TabsGuitar(chord: aMinor, isActive: true)
-                        .environment(\.guitarSize, .small)
-                    StrumGuitar(chord: aMinor, isActive: true, strumTrigger: 0)
-                        .environment(\.guitarSize, .small)
+                .environment(\.guitarSize, .small)
+
+
+            }
+            .padding()
+            .onAppear {
+                beat.start()
+            }
+            .onDisappear {
+                beat.stop()
+            }
+            .onChange(of: beat.beatCount) {
+                guard isFirstBeatOfBar else { return }
+                if isChordAActive {
+                    strumTriggerA += 1
+                } else {
+                    strumTriggerB += 1
                 }
             }
         }
