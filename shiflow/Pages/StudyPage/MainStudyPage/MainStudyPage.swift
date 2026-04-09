@@ -42,17 +42,20 @@ struct MainStudyPage: View {
             HStack(spacing: 22) {
                 ChordCard(
                     imageName: getChordImage(type: "finger"),
-                    title: "Finger Position"
+                    title: "Finger Position",
+                    destination: FingerPositionPage(title:"Finger Position \(selectedChord)")
                 )
                 
                 ChordCard(
                     imageName: getChordImage(type: "exercise"),
-                    title: "Finger Push Up Exercise"
+                    title: "Finger Push Up Exercise",
+                    destination: PushUpPage(title: "Exercise \(selectedChord)")
                 )
                 
                 ChordCard(
                     imageName: getChordImage(type: "strum"),
-                    title: "How to Strum"
+                    title: "How to Strum",
+                    destination: StrumPage(title: "Strum \(selectedChord)")
                 )
             }
             .frame(maxWidth: .infinity, alignment: .center)
@@ -62,5 +65,7 @@ struct MainStudyPage: View {
 }
 
 #Preview {
-    MainStudyPage()
+    NavigationStack {
+        MainStudyPage()
+    }
 }

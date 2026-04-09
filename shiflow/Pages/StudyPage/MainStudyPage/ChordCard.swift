@@ -7,12 +7,15 @@
 
 import SwiftUI
 
-extension MainStudyPage {
-    struct ChordCard: View {
-        var imageName: String
-        var title: String
-        
-        var body: some View {
+struct ChordCard <Destination: View> : View {
+    var imageName: String
+    var title: String
+    var destination: Destination
+    
+    var body: some View {
+        NavigationLink {
+            destination
+        } label: {
             VStack(alignment: .center, spacing: 8) {
                 Image(imageName)
                     .resizable()
@@ -26,6 +29,8 @@ extension MainStudyPage {
                     .multilineTextAlignment(.center)
             }
         }
+        
     }
 }
+
 
