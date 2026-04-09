@@ -8,21 +8,30 @@
 import SwiftUI
 
 struct ChordButton: View {
-    var chordTitle: String
+    var chordTitle: Chord
+    var isDisabled: Bool = false
+    var action: () -> Void
     
     var body: some View {
         
-        Text("\(chordTitle)")
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .background(Color.primaryDarkBrown)
-            .foregroundStyle(.white)
-            .clipShape(Circle())
-            .bold()
-            .shadow(radius: 3)
+        Button(action: action){
+            Text(chordTitle.id)
         }
+        .frame(minWidth: 33)
+        .padding(.horizontal, 8)
+        .padding(.vertical, 8)
+        .background(isDisabled ? Color.gray : Color.primaryDarkBrown)
+        .clipShape(Circle())
+        .disabled(isDisabled)
+        .foregroundStyle(.white)
+        .bold()
+        .shadow(radius: 3)
+        
     }
+}
 
 #Preview {
-    ChordButton(chordTitle: "A")
+    ChordButton(chordTitle: aMajor) {
+    
+    }
 }
