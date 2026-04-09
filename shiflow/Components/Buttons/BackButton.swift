@@ -1,16 +1,16 @@
 //
-//  ChordButton.swift
+//  BackButton.swift
 //  shiflow
 //
-//  Created by Nicole Clarence on 07/04/26.
+//  Created by Nicole Clarence on 08/04/26.
 //
 
-import Foundation
 import SwiftUI
-struct DissmissButton: View {
+import SwiftUI
+struct BackButton: View {
 
     var body: some View {
-        Image(systemName: "xmark")
+        Image(systemName: "chevron.backward")
             .padding(10)
             .background(Color.primaryDarkBrown)
             .foregroundStyle(.white)
@@ -21,5 +21,5 @@ struct DissmissButton: View {
 }
 
 #Preview {
-    DissmissButton()
+    BackButton()
 }
