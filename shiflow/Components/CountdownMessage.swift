@@ -145,7 +145,7 @@ struct CountdownMessage: View {
         Text("Exercise Guitar")
         
         if !isExerciseActive {
-            CountdownMessage(type: .fingerPushUp, tempo: 100) {
+            CountdownMessage(type: .fingerPushUp, tempo: 120) {
                 withAnimation {
                     isExerciseActive = true
                 }

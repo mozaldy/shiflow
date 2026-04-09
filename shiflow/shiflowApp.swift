@@ -10,9 +10,12 @@ import SwiftData
 
 @main
 struct shiflowApp: App {
+    @State private var metronomeManager = MetronomeManager()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainScreen()
+                .environment(metronomeManager)
         }
     }
 }
