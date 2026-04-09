@@ -14,6 +14,17 @@ enum GuitarString: String, CaseIterable {
     case G  = "G"   // 3rd string
     case B  = "B"   // 2nd string
     case e1 = "e"   // 1st string (high e, thinnest)
+
+    var thickness: Double {
+        switch self {
+        case .E6: return 6.0
+        case .A:  return 5.0
+        case .D:  return 4.0
+        case .G:  return 3.0
+        case .B:  return 2.0
+        case .e1: return 1.0
+        }
+    }
 }
 
 

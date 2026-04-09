@@ -9,7 +9,22 @@ import SwiftUI
 
 struct FingerRapidFireScreen: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        PracticeScreenLayout(activeTab: .rapidFire) {
+            HStack {
+                VStack {
+                    TabsGuitar(chord: aMinor, isActive: true)
+                        .environment(\.guitarSize, .small)
+                    StrumGuitar(chord: aMinor, isActive: true, strumTrigger: 0)
+                        .environment(\.guitarSize, .small)
+                }
+                VStack {
+                    TabsGuitar(chord: aMinor, isActive: true)
+                        .environment(\.guitarSize, .small)
+                    StrumGuitar(chord: aMinor, isActive: true, strumTrigger: 0)
+                        .environment(\.guitarSize, .small)
+                }
+            }
+        }
     }
 }
 
