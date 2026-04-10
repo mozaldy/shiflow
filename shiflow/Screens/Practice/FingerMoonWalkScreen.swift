@@ -2,7 +2,7 @@
 //  FingerMoonWalkScreen.swift
 //  shiflow
 //
-//  Created by Theressa Natasha Thebez on 10/04/26.
+//  Created by Mohammad Rizaldy Ramadhan on 09/04/26.
 //
 
 import SwiftUI
@@ -34,47 +34,60 @@ struct FingerMoonWalkScreen: View {
         beatInBar == 1
     }
 
+    @EnvironmentObject private var router: PracticeRouter
+    @State private var isExerciseActive = false
+
     var body: some View {
-        PracticeScreenLayout(activeTab: .moonWalk) {
-            VStack(spacing: 20) {
+        ZStack {
+            PracticeScreenLayout(activeTab: .moonWalk, beat: beat, onNext: {
+                router.navigate(to: .rapidFire)
+            }) {
+                VStack(spacing: 20) {
 
-                HStack(spacing: 16) {
-                    // Chord A column
-                    VStack(spacing: 8) {
-                        Text(chordA.name)
-                            .font(.headline)
-                            .foregroundStyle(isChordAActive ? .primaryDarkBrown : .primaryLightBrown)
-                        TabsGuitar(chord: chordA, isActive: isChordAActive)
-                    }
-                    VStack(spacing: 24) {
-                        BeatIndicator(currentBeat: beatInBar, totalBeats: beatsPerBar, isPlaying: beat.isPlaying)
-                        BPMControls(beat: beat)
+                    HStack(spacing: 16) {
+                        // Chord A column
+                        VStack(spacing: 8) {
+                            Text(chordA.name)
+                                .font(.headline)
+                                .foregroundStyle(isChordAActive ? .primaryDarkBrown : .primaryLightBrown)
+                            TabsGuitar(chord: chordA, isActive: isChordAActive)
+                        }
+                        VStack(spacing: 24) {
+                            BeatIndicator(currentBeat: beatInBar, totalBeats: beatsPerBar, isPlaying: beat.isPlaying)
+                            BPMControls(beat: beat)
+                        }
+
+                        // Chord B column
+                        VStack(spacing: 8) {
+                            Text(chordB.name)
+                                .font(.headline)
+                                .foregroundStyle(!isChordAActive ? .primaryDarkBrown : .primaryLightBrown)
+                            TabsGuitar(chord: chordB, isActive: !isChordAActive)
+                        }
                     }
 
-                    // Chord B column
-                    VStack(spacing: 8) {
-                        Text(chordB.name)
-                            .font(.headline)
-                            .foregroundStyle(!isChordAActive ? .primaryDarkBrown : .primaryLightBrown)
-                        TabsGuitar(chord: chordB, isActive: !isChordAActive)
+
+                }
+                .padding()
+                .onDisappear {
+                    beat.stop()
+                }
+                .onChange(of: beat.beatCount) {
+                    guard isFirstBeatOfBar else { return }
+                    if isChordAActive {
+                        strumTriggerA += 1
+                    } else {
+                        strumTriggerB += 1
                     }
                 }
-
-
             }
-            .padding()
-            .onAppear {
-                beat.start()
-            }
-            .onDisappear {
-                beat.stop()
-            }
-            .onChange(of: beat.beatCount) {
-                guard isFirstBeatOfBar else { return }
-                if isChordAActive {
-                    strumTriggerA += 1
-                } else {
-                    strumTriggerB += 1
+            
+            if !isExerciseActive {
+                CountdownMessage(type: .moonwalk, tempo: beat.bpm) {
+                    withAnimation {
+                        isExerciseActive = true
+                    }
+                    beat.start()
                 }
             }
         }
@@ -83,4 +96,5 @@ struct FingerMoonWalkScreen: View {
 
 #Preview {
     FingerMoonWalkScreen()
+        .environmentObject(PracticeRouter())
 }

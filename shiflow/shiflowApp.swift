@@ -11,7 +11,7 @@ import SwiftUI
 @main
 struct shiflowApp: App {
     @State private var metronomeManager = MetronomeManager()
-
+    
     var body: some Scene {
         WindowGroup {
             MainScreen()

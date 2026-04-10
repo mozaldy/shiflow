@@ -25,14 +25,9 @@ struct TabsGuitar: View {
 
                     ForEach(0..<fretCount, id: \.self) { fret in
                         FretCell(
-                            fingerNumber: chord.getFingerNumber(
-                                string: guitarString,
-                                fret: fret + 1
-                            ),
+                            fingerNumber: chord.getFingerNumber(string: guitarString, fret: fret + 1),
                             guitarString: guitarString,
-                            isGuitarStringStrummed: chord.isStringStrummed(
-                                for: guitarString
-                            )
+                            isGuitarStringStrummed: chord.isStringStrummed(for: guitarString)
                         )
                     }
                 }
