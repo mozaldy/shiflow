@@ -9,10 +9,12 @@ import SwiftUI
 
 struct FingerPositionScreen: View {
     @Binding var path: NavigationPath
+
     var title: String
+    var chord: String
+
     @State private var showExitDialog = false
     @State private var showFinger = false
-    var chord: String
 
     var body: some View {
         VStack {
@@ -98,6 +100,7 @@ struct FingerPositionScreen: View {
 #Preview {
     FingerPositionScreen(
         path: .constant(NavigationPath()),
-        title: "Finger Position", chord: "am_chord"
+        title: "Finger Position",
+        chord: "Am"
     )
 }
