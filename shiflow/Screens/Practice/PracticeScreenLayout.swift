@@ -15,6 +15,7 @@ enum PracticeTab: String, CaseIterable {
 
 struct PracticeScreenLayout<Content: View>: View {
     let activeTab: PracticeTab
+    var beat: BeatTimer?
     @ViewBuilder let content: () -> Content
 
     var body: some View {
@@ -28,6 +29,7 @@ struct PracticeScreenLayout<Content: View>: View {
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: 50)
+                RepCounter(beat: beat)
 
                 // Screen-specific content
                 content()
@@ -55,5 +57,11 @@ struct PracticeScreenLayout<Content: View>: View {
             }
             .ignoresSafeArea()
         }
+    }
+}
+
+#Preview{
+    PracticeScreenLayout (activeTab: .rapidFire) {
+        Text("Hello")
     }
 }

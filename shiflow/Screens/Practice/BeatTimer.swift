@@ -32,7 +32,7 @@ class BeatTimer: ObservableObject {
     }
 
     func stop() {
-        isPlaying = true
+        isPlaying = false
         timer?.invalidate()
         timer = nil
     }

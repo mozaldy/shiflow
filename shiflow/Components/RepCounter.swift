@@ -4,8 +4,9 @@ internal import Combine
 
 struct RepCounter: View {
     @State private var progress: Double = 0
-    var tempo: Double = 0.05
+    var beat: BeatTimer?
     
+    let timerInterval: TimeInterval = 0.05
     let timer = Timer.publish(every: 0.05, on: .main, in: .common).autoconnect()
     
     var body: some View {
@@ -14,9 +15,18 @@ struct RepCounter: View {
                 ProgressIcon(progress: progress, id: angka)
             }
             .onReceive(timer) { _ in
-                // Each circle progresses at different speed
-                progress += tempo
-                
+                if beat == nil {
+                    progress += (timerInterval * (60.0 / 60.0)) / 4.0
+                }
+            }
+        }
+        .onChange(of: beat?.beatCount) { newValue, _ in
+            guard let count = newValue, let bpm = beat?.bpm, let isPlaying = beat?.isPlaying, isPlaying else { return }
+
+            let targetProgress = Double(count) / 4.0
+
+            withAnimation(.linear(duration: 60.0 / bpm)) {
+                progress = targetProgress
             }
         }
     }
@@ -27,20 +37,34 @@ struct ProgressIcon: View {
     var progress: Double
     var id: Int
     
+    private var maxIcons: Double { 10.0 }
+    
+    private var isOddCycle: Bool {
+        let cycle = Int(max(0, progress) / maxIcons)
+        return cycle % 2 != 0
+    }
+    
+    private var effectiveProgress: Double {
+        progress.truncatingRemainder(dividingBy: maxIcons)
+    }
+    
     var body: some View {
         ZStack {
             Circle()
-                .fill(color(progress - Double(id)))
+                // We subtract (id - 1) so that id=1 starts transitioning from progress 0 to 1 and id=2 starts from progress -1 to 1, and so on to the nth id
+                .fill(color(effectiveProgress - Double(id - 1), isOddCycle: isOddCycle))
                 .frame(width: 30, height: 30)
-                .offset(x: 0, y: -110)
             Text("\(id)")
-                .foregroundColor(.white)                   .offset(x: 0, y: -110)
+                .foregroundColor(.white)                   
         }
     }
     
-    func color(_ progress: Double) -> Color {
-        let startColor = UIColor(named: "PrimaryDarkBrown") ?? .brown
-        let endColor = UIColor(named: "PrimaryLightBrown") ?? .systemBrown
+    func color(_ clampedInput: Double, isOddCycle: Bool) -> Color {
+        let baseStartColor = UIColor(named: "PrimaryDarkBrown") ?? .brown
+        let baseEndColor = UIColor(named: "PrimaryLightBrown") ?? .systemBrown
+        
+        let startColor = isOddCycle ? baseEndColor : baseStartColor
+        let endColor = isOddCycle ? baseStartColor : baseEndColor
         
         var startRed: CGFloat = 0
         var startGreen: CGFloat = 0
@@ -54,7 +78,7 @@ struct ProgressIcon: View {
         startColor.getRed(&startRed, green: &startGreen, blue: &startBlue, alpha: &startAlpha)
         endColor.getRed(&endRed, green: &endGreen, blue: &endBlue, alpha: &endAlpha)
         
-        let clampedProgress = min(max(progress, 0), 1)
+        let clampedProgress = min(max(clampedInput, 0), 1)
         
         return Color(
             red: startRed + (endRed - startRed) * clampedProgress,
