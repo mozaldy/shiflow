@@ -35,7 +35,7 @@ struct FingerMoonWalkScreen: View {
     }
 
     var body: some View {
-        PracticeScreenLayout(activeTab: .moonWalk) {
+        PracticeScreenLayout(activeTab: .moonWalk, beat: beat) {
             VStack(spacing: 20) {
 
                 HStack(spacing: 16) {

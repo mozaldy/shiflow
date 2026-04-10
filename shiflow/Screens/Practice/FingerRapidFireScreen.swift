@@ -35,7 +35,7 @@ struct FingerRapidFireScreen: View {
     }
 
     var body: some View {
-        PracticeScreenLayout(activeTab: .rapidFire) {
+        PracticeScreenLayout(activeTab: .rapidFire, beat: beat) {
             VStack {
 
                 HStack(spacing: 0) {
