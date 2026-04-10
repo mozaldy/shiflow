@@ -11,6 +11,7 @@ struct FingerPositionScreen: View {
     @Binding var path: NavigationPath
     var title: String
     @State private var showExitDialog = false
+    @State private var showFinger = false
 
     var body: some View {
         VStack {
@@ -19,16 +20,33 @@ struct FingerPositionScreen: View {
                 .bold()
                 .padding(.vertical)
 
-            HStack(spacing: 40) {
-                Image("am_chord")
-                    .resizable()
-                    .frame(width: 300, height: 200)
+            HStack(spacing: 60) {
+                ZStack {
+                    Image("am_chord")
+                        .resizable()
+                        .frame(width: 300, height: 200)
+                        .opacity(showFinger ? 0 : 1)
+
+                    Image("am_exercise")
+                        .resizable()
+                        .frame(width: 300, height: 200)
+                        .opacity(showFinger ? 1 : 0)
+                }
+                .onAppear {
+                    Timer.scheduledTimer(withTimeInterval: 2, repeats: true) {
+                        _ in
+                        withAnimation {
+                            showFinger.toggle()
+                        }
+                    }
+                }
 
                 Image("HandCount")
                     .resizable()
                     .frame(width: 200, height: 200)
             }
-            
+            .animation(.easeInOut(duration: 0.5), value: showFinger)
+
             Spacer()
 
             HStack {
@@ -46,7 +64,7 @@ struct FingerPositionScreen: View {
                 }
             }
         }
-        .padding()
+        .padding(.bottom)
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {

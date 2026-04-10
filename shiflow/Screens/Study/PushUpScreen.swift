@@ -12,6 +12,33 @@ struct PushUpScreen: View {
     @Binding var path: NavigationPath
     var title: String
     @State private var showExitDialog = false
+    @State private var showFinger = false
+
+    @StateObject private var beat = BeatTimer(bpm: 60)
+
+    @State private var strumTriggerA: Int = 0
+    @State private var strumTriggerB: Int = 0
+
+    let chordA = aMinor
+    let chordB = dMajor
+
+    private let beatsPerBar: Int = 4
+
+    private var barIndex: Int {
+        (beat.beatCount - 1) / beatsPerBar
+    }
+
+    private var isChordAActive: Bool {
+        barIndex % 2 == 0
+    }
+
+    private var beatInBar: Int {
+        ((beat.beatCount - 1) % beatsPerBar) + 1
+    }
+
+    private var isFirstBeatOfBar: Bool {
+        beatInBar == 1
+    }
 
     var body: some View {
         VStack {
@@ -20,16 +47,57 @@ struct PushUpScreen: View {
                 .bold()
                 .padding(.vertical)
 
-            HStack(spacing: 80) {
-                Image("am_chord")
-                    .resizable()
-                    .frame(width: 300, height: 200)
+            VStack {
+                HStack(spacing: 16) {
+                    ZStack {
+                        Image("am_chord")
+                            .resizable()
+                            .frame(width: 300, height: 200)
+                            .opacity(showFinger ? 0 : 1)
 
-                Image("am_strum")
-                    .resizable()
-                    .frame(width: 300, height: 200)
+                        Image("am_exercise")
+                            .resizable()
+                            .frame(width: 300, height: 200)
+                            .opacity(showFinger ? 1 : 0)
+                    }
+                    .onAppear {
+                        Timer.scheduledTimer(
+                            withTimeInterval: 4,
+                            repeats: true
+                        ) {
+                            _ in
+                            withAnimation {
+                                showFinger.toggle()
+                            }
+                        }
+                    }
+
+                    VStack(spacing: 24) {
+                        BeatIndicator(
+                            currentBeat: beatInBar,
+                            totalBeats: beatsPerBar,
+                            isPlaying: beat.isPlaying
+                        )
+                        BPMControls(beat: beat)
+                    }
+                }
+
             }
-            
+            .onAppear {
+                beat.start()
+            }
+            .onDisappear {
+                beat.stop()
+            }
+            .onChange(of: beat.beatCount) {
+                guard isFirstBeatOfBar else { return }
+                if isChordAActive {
+                    strumTriggerA += 1
+                } else {
+                    strumTriggerB += 1
+                }
+
+            }
             Spacer()
 
             HStack {
@@ -47,7 +115,7 @@ struct PushUpScreen: View {
                 }
             }
         }
-        .padding()
+        .padding(.bottom)
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {

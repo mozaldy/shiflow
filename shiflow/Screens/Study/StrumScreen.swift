@@ -13,6 +13,19 @@ struct StrumScreen: View {
     var title: String
     @State private var showExitDialog = false
 
+    @StateObject private var beat = BeatTimer(bpm: 80)
+    @State private var strumTrigger: Int = 0
+    let chord = aMinor
+    private let beatsPerBar = 4
+
+    private var beatInBar: Int {
+        ((beat.beatCount - 1) % beatsPerBar) + 1
+    }
+
+    private var isFirstBeatOfBar: Bool {
+        beatInBar == 1
+    }
+
     var body: some View {
         VStack {
 
@@ -21,14 +34,22 @@ struct StrumScreen: View {
                 .bold()
                 .padding(.vertical)
 
-            HStack(spacing: 80) {
-                Image("am_chord")
+            HStack(spacing: 60) {
+                Image("am")
                     .resizable()
                     .frame(width: 300, height: 200)
 
-                Image("am_strum")
-                    .resizable()
-                    .frame(width: 300, height: 200)
+                Divider()
+                    .background(Color.primaryDarkBrown)
+                    .shadow(color: .brown.opacity(1), radius: 8)
+
+                StrumGuitar(
+                    chord: chord,
+                    isActive: true,
+                    strumTrigger: strumTrigger,
+                    isDownStrum: true
+                )
+
             }
 
             Spacer()
@@ -50,6 +71,17 @@ struct StrumScreen: View {
         }
         .padding()
         .navigationBarBackButtonHidden(true)
+        .onAppear {
+            beat.start()
+        }
+        .onDisappear {
+            beat.stop()
+        }
+
+        .onChange(of: beat.beatCount) {
+            guard isFirstBeatOfBar else { return }
+            strumTrigger += 1
+        }
         .exitDialog(
             isPresented: $showExitDialog,
             onExit: {

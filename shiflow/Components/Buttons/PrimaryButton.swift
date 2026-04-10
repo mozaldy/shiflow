@@ -9,16 +9,28 @@ import Foundation
 import SwiftUI
 struct PrimaryButton: View {
 
+    var isDisabled: Bool = false
+
     var body: some View {
-        Text("Button")
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .background(.brown)
-            .foregroundStyle(.white)
-            .clipShape(Capsule())
+        Button("START") {
+            
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
+        .background(isDisabled ? Color.gray : Color("PrimaryDarkBrown"))
+        .foregroundStyle(.white)
+        .clipShape(Capsule())
+        .bold()
+        .opacity(isDisabled ? 0.5 : 1.0)
+        .disabled(isDisabled)
+        .shadow(radius: 3)
     }
 }
 
-#Preview {
+#Preview("Enabled") {
     PrimaryButton()
+}
+
+#Preview("Disabled") {
+    PrimaryButton(isDisabled: true)
 }

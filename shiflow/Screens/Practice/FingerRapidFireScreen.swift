@@ -67,7 +67,6 @@ struct FingerRapidFireScreen: View {
 
 
             }
-            .padding()
             .onAppear {
                 beat.start()
             }
