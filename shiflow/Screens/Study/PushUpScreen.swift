@@ -138,6 +138,6 @@ struct PushUpScreen: View {
     PushUpScreen(
         path: .constant(NavigationPath()),
         title: "Finger Push Up",
-        chord: "am_chord"
+        chord: "am"
     )
 }
