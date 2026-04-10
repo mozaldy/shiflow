@@ -2,7 +2,7 @@
 //  TempoSettingsView.swift
 //  shiflow
 //
-//  Created by Theressa Natasha Thebez on 10/04/26.
+//  Created by Jose Putra Perdana Taneo on 09/04/26.
 //
 
 import SwiftUI

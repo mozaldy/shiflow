@@ -2,7 +2,7 @@
 //  GuitarStringLine.swift
 //  shiflow
 //
-//  Created by Theressa Natasha Thebez on 10/04/26.
+//  Created by Mohammad Rizaldy Ramadhan on 09/04/26.
 //
 
 import SwiftUI
