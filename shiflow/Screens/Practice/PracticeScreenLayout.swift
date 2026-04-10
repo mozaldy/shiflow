@@ -11,6 +11,7 @@ struct PracticeScreenLayout<Content: View>: View {
     let activeTab: PracticeTab
     var beat: BeatTimer?
     var onNext: () -> Void = {}
+    var onDismiss: () -> Void = {}
     @ViewBuilder let content: () -> Content
 
     var body: some View {
@@ -28,9 +29,7 @@ struct PracticeScreenLayout<Content: View>: View {
 
             VStack {
                 HStack {
-                    Button(action: onDismiss) {
-                        DissmissButton()
-                    }
+                    DissmissButton(action: onDismiss)
                     .padding(25)
                     Spacer()
                 }

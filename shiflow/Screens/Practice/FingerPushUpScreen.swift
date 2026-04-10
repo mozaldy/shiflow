@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct FingerPushUpScreen: View {
-    @EnvironmentObject private var router: PracticeRouter
-    @StateObject private var beat = BeatTimer(bpm: 60)
+    let chordA: Chord
+    let chordB: Chord
+    @ObservedObject var beat: BeatTimer
 
-    @State private var isExerciseActive = false
     @State private var showFinger = false
     @State private var fingerToggleTimer: Timer?
 
@@ -21,50 +21,50 @@ struct FingerPushUpScreen: View {
         ((beat.beatCount - 1) % beatsPerBar) + 1
     }
 
+    private var chordImageName: String {
+        switch chordA.id.lowercased() {
+        case "am": return "am_chord"
+        case "d": return "d_chord"
+        default: return "am_chord"
+        }
+    }
+
+    private var exerciseImageName: String {
+        switch chordA.id.lowercased() {
+        case "am": return "am_exercise"
+        case "d": return "d_exercise"
+        default: return "am_exercise"
+        }
+    }
+
     var body: some View {
-        ZStack {
-            PracticeScreenLayout(activeTab: .pushUp, beat: beat, onNext: {
-                router.navigate(to: .moonWalk)
-            }) {
-                HStack(spacing: 16) {
-                    ZStack {
-                        Image("am_chord")
-                            .resizable()
-                            .frame(width: 300, height: 200)
-                            .opacity(showFinger ? 0 : 1)
+        HStack(spacing: 16) {
+            ZStack {
+                Image(chordImageName)
+                    .resizable()
+                    .frame(width: 300, height: 200)
+                    .opacity(showFinger ? 0 : 1)
 
-                        Image("am_exercise")
-                            .resizable()
-                            .frame(width: 300, height: 200)
-                            .opacity(showFinger ? 1 : 0)
-                    }
+                Image(exerciseImageName)
+                    .resizable()
+                    .frame(width: 300, height: 200)
+                    .opacity(showFinger ? 1 : 0)
+            }
 
-                    VStack(spacing: 24) {
-                        BeatIndicator(
-                            currentBeat: beatInBar,
-                            totalBeats: beatsPerBar,
-                            isPlaying: beat.isPlaying
-                        )
-                        BPMControls(beat: beat)
-                    }
-                }
+            VStack(spacing: 24) {
+                BeatIndicator(
+                    currentBeat: beatInBar,
+                    totalBeats: beatsPerBar,
+                    isPlaying: beat.isPlaying
+                )
+                BPMControls(beat: beat)
             }
-            .onAppear {
-                startFingerToggleTimer()
-            }
-            .onDisappear {
-                stopFingerToggleTimer()
-                beat.stop()
-            }
-            
-            if !isExerciseActive {
-                CountdownMessage(type: .fingerPushUp, tempo: beat.bpm) {
-                    withAnimation {
-                        isExerciseActive = true
-                    }
-                    beat.start()
-                }
-            }
+        }
+        .onAppear {
+            startFingerToggleTimer()
+        }
+        .onDisappear {
+            stopFingerToggleTimer()
         }
     }
 
@@ -84,6 +84,5 @@ struct FingerPushUpScreen: View {
 }
 
 #Preview {
-    FingerPushUpScreen()
-        .environmentObject(PracticeRouter())
+    FingerPushUpScreen(chordA: aMinor, chordB: dMajor, beat: BeatTimer(bpm: 60))
 }

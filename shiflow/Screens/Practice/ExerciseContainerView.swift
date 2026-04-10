@@ -11,6 +11,9 @@ import SwiftUI
 struct ExerciseContainerView: View {
     @Environment(MetronomeManager.self) private var metronome
     @Environment(\.dismiss) private var dismiss
+    @StateObject private var pushUpBeat = BeatTimer(bpm: 60)
+    @StateObject private var moonWalkBeat = BeatTimer(bpm: 60)
+    @StateObject private var rapidFireBeat = BeatTimer(bpm: 80)
     
     @State private var currentTab: PracticeTab = .pushUp
     @State private var isCountingDown = true
@@ -19,6 +22,17 @@ struct ExerciseContainerView: View {
     
     let chordA: Chord
     let chordB: Chord
+
+    private var currentBeat: BeatTimer {
+        switch currentTab {
+        case .pushUp:
+            return pushUpBeat
+        case .moonWalk:
+            return moonWalkBeat
+        case .rapidFire:
+            return rapidFireBeat
+        }
+    }
     
     var body: some View {
         ZStack {
@@ -37,10 +51,10 @@ struct ExerciseContainerView: View {
                 // Tampilan berdasarkan tab aktif
                 PracticeScreenLayout(
                     activeTab: currentTab,
+                    beat: currentBeat,
                     onNext: moveToNextStep,
                     onDismiss: {
-                        // Pause
-                        metronome.pauseMetronome()
+                        pauseCurrentExercise()
                         showingExitDialog = true
                     }
                 ) {
@@ -53,28 +67,37 @@ struct ExerciseContainerView: View {
                         type: getExerciseType(for: currentTab)
                     ) {
                         withAnimation { isCountingDown = false }
-                        metronome.startMetronome()
+                        currentBeat.start()
                     }
                 }
             }
         }
+        .onDisappear {
+            stopAllExerciseTimers()
+            metronome.stopMetronome()
+        }
         .exitDialog(
             isPresented: $showingExitDialog,
             onExit: {
+                stopAllExerciseTimers()
                 metronome.stopMetronome()
                 dismiss()
             },
             onCancel: {
                 showingExitDialog = false
-                metronome.startMetronome()
+                currentBeat.start()
             })
     }
-        
-    
-    private func startNextStep(_ next: PracticeTab) {
-        metronome.stopMetronome() // Berhenti
-        currentTab = next
-        isCountingDown = true // Muncul countdown lagi
+
+    private func pauseCurrentExercise() {
+        currentBeat.stop()
+        metronome.pauseMetronome()
+    }
+
+    private func stopAllExerciseTimers() {
+        pushUpBeat.stop()
+        moonWalkBeat.stop()
+        rapidFireBeat.stop()
     }
     
     private func getExerciseType(for step: PracticeTab) -> ExerciseType {
@@ -86,6 +109,7 @@ struct ExerciseContainerView: View {
     }
     
     private func moveToNextStep() {
+        currentBeat.stop()
         metronome.stopMetronome()
         
         let allSteps = PracticeTab.allCases
@@ -107,13 +131,13 @@ struct ExerciseContainerView: View {
     private func displayContent(for tab: PracticeTab) -> some View {
         switch tab {
         case .pushUp:
-            FingerPushUpScreen(chordA: chordA, chordB: chordB)
+            FingerPushUpScreen(chordA: chordA, chordB: chordB, beat: pushUpBeat)
             
         case .moonWalk:
-            FingerMoonWalkScreen(chordA: chordA, chordB: chordB)
+            FingerMoonWalkScreen(beat: moonWalkBeat, chordA: chordA, chordB: chordB)
             
         case .rapidFire:
-            FingerRapidFireScreen(chordA: chordA, chordB: chordB)
+            FingerRapidFireScreen(beat: rapidFireBeat, chordA: chordA, chordB: chordB)
         }
     }
 }
