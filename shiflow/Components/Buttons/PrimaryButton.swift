@@ -8,12 +8,12 @@
 import Foundation
 import SwiftUI
 struct PrimaryButton: View {
-
     var isDisabled: Bool = false
+    var action: () -> Void
 
     var body: some View {
-        Button("START") {
-            
+        Button(action: action) {
+            Text("START")
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
@@ -28,9 +28,9 @@ struct PrimaryButton: View {
 }
 
 #Preview("Enabled") {
-    PrimaryButton()
+    //PrimaryButton(action: action)
 }
 
 #Preview("Disabled") {
-    PrimaryButton(isDisabled: true)
+    //PrimaryButton(action: action)
 }

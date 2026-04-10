@@ -15,6 +15,8 @@ enum PracticeTab: String, CaseIterable {
 
 struct PracticeScreenLayout<Content: View>: View {
     let activeTab: PracticeTab
+    let onNext: () -> Void
+    let onDismiss: () -> Void
     @ViewBuilder let content: () -> Content
 
     var body: some View {
@@ -38,7 +40,10 @@ struct PracticeScreenLayout<Content: View>: View {
             // Dismiss button (top-left)
             VStack {
                 HStack {
-                    DissmissButton().padding(25)
+                    Button(action: onDismiss) {
+                        DissmissButton()
+                    }
+                    .padding(25)
                     Spacer()
                 }
                 Spacer()
@@ -50,7 +55,7 @@ struct PracticeScreenLayout<Content: View>: View {
                 Spacer()
                 HStack {
                     Spacer()
-                    NextButton().padding(25)
+                    NextButton(action: onNext).padding(25)
                 }
             }
             .ignoresSafeArea()

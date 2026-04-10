@@ -8,18 +8,19 @@
 import SwiftUI
 
 struct FingerMoonWalkScreen: View {
+    @Environment(MetronomeManager.self) private var metronome
     @StateObject private var beat = BeatTimer(bpm: 60)
 
     @State private var strumTriggerA: Int = 0
     @State private var strumTriggerB: Int = 0
-
-    let chordA = aMinor
-    let chordB = dMajor
+    
+    let chordA: Chord
+    let chordB: Chord
 
     private let beatsPerBar: Int = 4
 
     private var barIndex: Int {
-        (beat.beatCount - 1) / beatsPerBar
+        max(0, (metronome.beatCount - 1) / metronome.beatsPerMeasure)
     }
 
     private var isChordAActive: Bool {
@@ -27,7 +28,7 @@ struct FingerMoonWalkScreen: View {
     }
 
     private var beatInBar: Int {
-        ((beat.beatCount - 1) % beatsPerBar) + 1
+        metronome.currentBeat
     }
 
     private var isFirstBeatOfBar: Bool {
@@ -35,9 +36,7 @@ struct FingerMoonWalkScreen: View {
     }
 
     var body: some View {
-        PracticeScreenLayout(activeTab: .moonWalk) {
             VStack(spacing: 20) {
-
                 HStack(spacing: 16) {
                     // Chord A column
                     VStack(spacing: 8) {
@@ -47,8 +46,8 @@ struct FingerMoonWalkScreen: View {
                         TabsGuitar(chord: chordA, isActive: isChordAActive)
                     }
                     VStack(spacing: 24) {
-                        BeatIndicator(currentBeat: beatInBar, totalBeats: beatsPerBar, isPlaying: beat.isPlaying)
-                        BPMControls(beat: beat)
+                        BeatIndicator(currentBeat: beatInBar, totalBeats: metronome.beatsPerMeasure, isPlaying: metronome.isPlaying)
+                        // BPMControls(beat: beat)
                     }
 
                     // Chord B column
@@ -63,24 +62,25 @@ struct FingerMoonWalkScreen: View {
 
             }
             .padding()
-            .onAppear {
-                beat.start()
-            }
-            .onDisappear {
-                beat.stop()
-            }
-            .onChange(of: beat.beatCount) {
-                guard isFirstBeatOfBar else { return }
-                if isChordAActive {
-                    strumTriggerA += 1
-                } else {
-                    strumTriggerB += 1
-                }
-            }
+//            .onAppear {
+//                beat.start()
+//            }
+//            .onDisappear {
+//                beat.stop()
+//            }
+//            .onChange(of: beat.beatCount) {
+//                guard isFirstBeatOfBar else { return }
+//                if isChordAActive {
+//                    strumTriggerA += 1
+//                } else {
+//                    strumTriggerB += 1
+//                }
+//            }
         }
-    }
+    
 }
 
 #Preview {
-    FingerMoonWalkScreen()
+    FingerMoonWalkScreen(chordA: aMajor, chordB: dMajor)
+        .environment(MetronomeManager())
 }

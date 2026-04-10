@@ -14,6 +14,8 @@ class MetronomeManager {
     var tempo: Double = 90.0
     var beatsPerMeasure: Int = 4
     var currentBeat: Int = 0
+    var beatCount: Int = 0
+    
     var isPlaying: Bool = false
     
     private var timer: Timer?
@@ -54,6 +56,7 @@ class MetronomeManager {
     }
     
     private func playTick() {
+        beatCount += 1
         // Update currentBeat -> play high and low tick
         currentBeat += 1
         if currentBeat > beatsPerMeasure {
@@ -97,6 +100,13 @@ class MetronomeManager {
         timer = nil
         isPlaying = false
         currentBeat = 0
+        beatCount = 0
+    }
+    
+    func pauseMetronome() {
+        timer?.invalidate()
+        timer = nil
+        isPlaying = false
     }
     
     

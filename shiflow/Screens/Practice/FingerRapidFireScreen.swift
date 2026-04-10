@@ -8,18 +8,19 @@
 import SwiftUI
 
 struct FingerRapidFireScreen: View {
+    @Environment(MetronomeManager.self) private var metronome
     @StateObject private var beat = BeatTimer(bpm: 80)
 
     @State private var strumTriggerA: Int = 0
     @State private var strumTriggerB: Int = 0
 
-    let chordA = aMinor
-    let chordB = dMajor
+    let chordA: Chord
+    let chordB: Chord
 
     private let beatsPerBar: Int = 4
 
     private var barIndex: Int {
-        (beat.beatCount - 1) / beatsPerBar
+        max(0, (metronome.beatCount - 1) / metronome.beatsPerMeasure)
     }
 
     private var isChordAActive: Bool {
@@ -27,7 +28,7 @@ struct FingerRapidFireScreen: View {
     }
 
     private var beatInBar: Int {
-        ((beat.beatCount - 1) % beatsPerBar) + 1
+        metronome.currentBeat
     }
 
     private var isFirstBeatOfBar: Bool {
@@ -35,9 +36,7 @@ struct FingerRapidFireScreen: View {
     }
 
     var body: some View {
-        PracticeScreenLayout(activeTab: .rapidFire) {
             VStack {
-
                 HStack(spacing: 0) {
                     // Chord A column
                     VStack(spacing: 8) {
@@ -47,12 +46,16 @@ struct FingerRapidFireScreen: View {
                         TabsGuitar(chord: chordA, isActive: isChordAActive)
                         StrumGuitar(chord: chordA, isActive: isChordAActive, strumTrigger: strumTriggerA, isDownStrum: barIndex % 2 == 0)
                     }
+                    .padding(.trailing, 5)
+                    .padding(.top, 12)
 
                     
                     VStack {
-                    BeatIndicator(currentBeat: beatInBar, totalBeats: beatsPerBar, isPlaying: beat.isPlaying)
+                        BeatIndicator(currentBeat: beatInBar, totalBeats: metronome.beatsPerMeasure, isPlaying: metronome.isPlaying)
                     
-                    BPMControls(beat: beat)
+                    Text("BPM :")
+                    Text("\(Int(metronome.tempo))")
+                    //BPMControls(beat: beat)
                     }
                     // Chord B column
                     VStack(spacing: 8) {
@@ -62,20 +65,22 @@ struct FingerRapidFireScreen: View {
                         TabsGuitar(chord: chordB, isActive: !isChordAActive)
                         StrumGuitar(chord: chordB, isActive: !isChordAActive, strumTrigger: strumTriggerB, isDownStrum: barIndex % 2 == 0)
                     }
+                    .padding(.leading, 5)
+                    .padding(.top, 12)
                 }
                 .environment(\.guitarSize, .small)
 
 
             }
-            .padding()
+            //.padding()
             .onAppear {
                 beat.start()
             }
             .onDisappear {
                 beat.stop()
             }
-            .onChange(of: beat.beatCount) {
-                guard isFirstBeatOfBar else { return }
+            .onChange(of: metronome.beatCount) {
+                guard metronome.currentBeat == 1 else { return }
                 if isChordAActive {
                     strumTriggerA += 1
                 } else {
@@ -84,8 +89,9 @@ struct FingerRapidFireScreen: View {
             }
         }
     }
-}
+
 
 #Preview {
-    FingerRapidFireScreen()
+    FingerRapidFireScreen(chordA: aMajor, chordB: dMajor)
+        .environment(MetronomeManager())
 }
