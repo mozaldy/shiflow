@@ -14,6 +14,7 @@ struct MainScreen: View {
     @State private var rightChord: Chord? = nil
         
     @State private var showingTempoSettings: Bool = false
+    @State private var showingExercise: Bool = false
     
     let allChords = [aMinor, cMajor, dMajor, fMajor, eMinor, gMajor]
     
@@ -134,7 +135,9 @@ struct MainScreen: View {
                     
                     Spacer()
                     
-                    PrimaryButton(isDisabled: leftChord == nil || rightChord == nil)
+                    PrimaryButton(isDisabled: leftChord == nil || rightChord == nil){
+                        showingExercise = true
+                    }
                 }
                 .offset(y: -16)
                 
@@ -153,6 +156,12 @@ struct MainScreen: View {
                         .background(.thinMaterial)
                         .cornerRadius(30)
                         .shadow(radius: 20)
+                }
+        }
+        .fullScreenCover(isPresented: $showingExercise) {
+            if let left = leftChord, let right = rightChord {
+                    ExerciseContainerView(chordA: left, chordB: right)
+                    .environment(metronome)
                 }
         }
     }

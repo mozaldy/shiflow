@@ -38,8 +38,9 @@ enum ExerciseType {
 }
 
 struct CountdownMessage: View {
+    @Environment(MetronomeManager.self) private var metronome
+
     let type: ExerciseType
-    var tempo: Double
     var onFinished: () -> Void
     
     @State var showMessage = true
@@ -73,11 +74,11 @@ struct CountdownMessage: View {
                     countdownNumber -= 1
                 }
                 AudioServicesPlaySystemSound(1022)
+                onFinished()
             } else {
                 withAnimation {
                     showCountdown = false
                 }
-                onFinished()
                 countdownNumber = 3 // reset
             }
         }
@@ -86,7 +87,7 @@ struct CountdownMessage: View {
         //let type: ExerciseType
         
         ZStack {
-            Color.black.opacity(0.6)
+            Color.black.opacity(0.8)
                 .ignoresSafeArea()
             
             VStack {
@@ -115,7 +116,7 @@ struct CountdownMessage: View {
             AudioServicesPlaySystemSound(1104)
             
             // Reset timer
-            timer = Timer.publish(every: 60.0/tempo, on: .main, in: .common).autoconnect()
+            timer = Timer.publish(every: 60.0/metronome.tempo, on: .main, in: .common).autoconnect()
             showMessage = false
             showCountdown = true
         }
@@ -145,11 +146,12 @@ struct CountdownMessage: View {
         Text("Exercise Guitar")
         
         if !isExerciseActive {
-            CountdownMessage(type: .fingerPushUp, tempo: 120) {
+            CountdownMessage(type: .fingerPushUp) {
                 withAnimation {
                     isExerciseActive = true
                 }
             }
+            .environment(MetronomeManager())
         }
     }
 }
