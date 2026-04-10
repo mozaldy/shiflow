@@ -12,6 +12,7 @@ struct FingerPositionScreen: View {
     var title: String
     @State private var showExitDialog = false
     @State private var showFinger = false
+    var chord: String
 
     var body: some View {
         VStack {
@@ -22,13 +23,11 @@ struct FingerPositionScreen: View {
 
             HStack(spacing: 60) {
                 ZStack {
-                    Image("am_chord")
-                        .resizable()
+                    Image("\(chord.lowercased())_chord").resizable()
                         .frame(width: 300, height: 200)
                         .opacity(showFinger ? 0 : 1)
 
-                    Image("am_exercise")
-                        .resizable()
+                    Image("\(chord.lowercased())_exercise").resizable()
                         .frame(width: 300, height: 200)
                         .opacity(showFinger ? 1 : 0)
                 }
@@ -52,7 +51,7 @@ struct FingerPositionScreen: View {
             HStack {
                 Spacer()
                 Button {
-                    path.append("pushup")
+                    path.append("pushup-\(chord)")
                 } label: {
                     Text("Next")
                         .font(.headline)
@@ -86,11 +85,19 @@ struct FingerPositionScreen: View {
             }
         )
     }
+
+    func chordImage() -> String {
+        return title.lowercased()
+    }
+
+    func exerciseImage() -> String {
+        return "\(title.lowercased())_exercise"
+    }
 }
 
 #Preview {
     FingerPositionScreen(
         path: .constant(NavigationPath()),
-        title: "Finger Position"
+        title: "Finger Position", chord: "am_chord"
     )
 }

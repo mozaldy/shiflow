@@ -13,14 +13,13 @@ struct PushUpScreen: View {
     var title: String
     @State private var showExitDialog = false
     @State private var showFinger = false
+    var chord: String
 
     @StateObject private var beat = BeatTimer(bpm: 60)
 
     @State private var strumTriggerA: Int = 0
-    @State private var strumTriggerB: Int = 0
 
     let chordA = aMinor
-    let chordB = dMajor
 
     private let beatsPerBar: Int = 4
 
@@ -50,13 +49,11 @@ struct PushUpScreen: View {
             VStack {
                 HStack(spacing: 16) {
                     ZStack {
-                        Image("am_chord")
-                            .resizable()
+                        Image("\(chord.lowercased())_chord").resizable()
                             .frame(width: 300, height: 200)
                             .opacity(showFinger ? 0 : 1)
 
-                        Image("am_exercise")
-                            .resizable()
+                        Image("\(chord.lowercased())_exercise").resizable()
                             .frame(width: 300, height: 200)
                             .opacity(showFinger ? 1 : 0)
                     }
@@ -93,8 +90,6 @@ struct PushUpScreen: View {
                 guard isFirstBeatOfBar else { return }
                 if isChordAActive {
                     strumTriggerA += 1
-                } else {
-                    strumTriggerB += 1
                 }
 
             }
@@ -103,7 +98,7 @@ struct PushUpScreen: View {
             HStack {
                 Spacer()
                 Button {
-                    path.append("strum")
+                    path.append("strum-\(chord)")
                 } label: {
                     Text("Next")
                         .font(.headline)
@@ -142,6 +137,7 @@ struct PushUpScreen: View {
 #Preview {
     PushUpScreen(
         path: .constant(NavigationPath()),
-        title: "Finger Push Up"
+        title: "Finger Push Up",
+        chord: "am_chord"
     )
 }

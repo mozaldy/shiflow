@@ -177,13 +177,29 @@ struct MainScreen: View {
             }
             .navigationDestination(for: String.self) { value in
                 if value == "study" {
-                    MainStudyScreen(path: $path)
-                } else if value == "finger" {
-                    FingerPositionScreen(path: $path, title: "Finger Position")
-                } else if value == "pushup" {
-                    PushUpScreen(path: $path, title: "Exercise")
-                } else if value == "strum" {
-                    StrumScreen(path: $path, title: "Strum")
+                    MainStudyScreen(path: $path, selectedChord: "Am")
+                } else if value.starts(with: "finger-") {
+                    let chord = value.replacingOccurrences(
+                        of: "finger-",
+                        with: ""
+                    )
+                    FingerPositionScreen(
+                        path: $path,
+                        title: "Finger Position",
+                        chord: chord
+                    )
+                } else if value.starts(with: "pushup-") {
+                    let chord = value.replacingOccurrences(
+                        of: "pushup-",
+                        with: ""
+                    )
+                    PushUpScreen(path: $path, title: "Exercise", chord: chord)
+                } else if value.starts(with: "strum-") {
+                    let chord = value.replacingOccurrences(
+                        of: "strum-",
+                        with: ""
+                    )
+                    StrumScreen(path: $path, title: "Strum", chord: chord)
                 }
             }
         }

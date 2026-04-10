@@ -10,7 +10,7 @@ import SwiftUI
 
 struct MainStudyScreen: View {
     @Binding var path: NavigationPath
-    @State var selectedChord = "Am"
+    @State var selectedChord: String
 
     let chords = ["Am", "C", "D", "F", "Em", "G"]
 
@@ -45,7 +45,7 @@ struct MainStudyScreen: View {
                     imageName: getChordImage(type: "finger"),
                     title: "Finger Position",
                     action: {
-                        path.append("finger")
+                        path.append("finger-\(selectedChord)")
                     }
                 )
 
@@ -53,7 +53,7 @@ struct MainStudyScreen: View {
                     imageName: getChordImage(type: "exercise"),
                     title: "Finger Push Up Exercise",
                     action: {
-                        path.append("pushup")
+                        path.append("pushup-\(selectedChord)")
                     }
                 )
 
@@ -61,7 +61,7 @@ struct MainStudyScreen: View {
                     imageName: getChordImage(type: "strum"),
                     title: "How to Strum",
                     action: {
-                        path.append("strum")
+                        path.append("strum-\(selectedChord)")
                     }
                 )
             }
@@ -86,6 +86,9 @@ struct MainStudyScreen: View {
 
 #Preview {
     NavigationStack {
-        MainStudyScreen(path: .constant(NavigationPath()))
+        MainStudyScreen(
+            path: .constant(NavigationPath()),
+            selectedChord: "Am"
+        )
     }
 }

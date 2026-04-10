@@ -11,11 +11,12 @@ import SwiftUI
 struct StrumScreen: View {
     @Binding var path: NavigationPath
     var title: String
+    var chord: String
     @State private var showExitDialog = false
 
     @StateObject private var beat = BeatTimer(bpm: 80)
     @State private var strumTrigger: Int = 0
-    let chord = aMinor
+    let chords = aMinor
     private let beatsPerBar = 4
 
     private var beatInBar: Int {
@@ -35,8 +36,7 @@ struct StrumScreen: View {
                 .padding(.vertical)
 
             HStack(spacing: 60) {
-                Image("am")
-                    .resizable()
+                Image("\(chord.lowercased())")                    .resizable()
                     .frame(width: 300, height: 200)
 
                 Divider()
@@ -44,7 +44,7 @@ struct StrumScreen: View {
                     .shadow(color: .brown.opacity(1), radius: 8)
 
                 StrumGuitar(
-                    chord: chord,
+                    chord: chords,
                     isActive: true,
                     strumTrigger: strumTrigger,
                     isDownStrum: true
@@ -100,6 +100,6 @@ struct StrumScreen: View {
         path: .constant(
             NavigationPath()
         ),
-        title: "How to Strum"
+        title: "How to Strum", chord: "am_chord"
     )
 }
