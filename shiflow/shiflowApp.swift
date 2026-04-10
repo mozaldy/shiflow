@@ -5,8 +5,8 @@
 //  Created by Mohammad Rizaldy Ramadhan on 06/04/26.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 @main
 struct shiflowApp: App {

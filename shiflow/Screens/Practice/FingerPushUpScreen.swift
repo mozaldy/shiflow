@@ -8,28 +8,39 @@
 import SwiftUI
 
 struct FingerPushUpScreen: View {
-    @Environment(MetronomeManager.self) private var metronome
-    
-    let chordA: Chord
-    let chordB: Chord
-    
-    @State private var isCountingDown = true
-    @State private var showingNextExercise: Bool = false
-    
+    @EnvironmentObject private var router: PracticeRouter
+    @StateObject private var beat = BeatTimer(bpm: 60)
+
+    @State private var isExerciseActive = false
+
     var body: some View {
         ZStack {
-            VStack {
-                Text("Exercise: \(chordA.name) - \(chordB.name)")
-                Text("BPM: \(Int(metronome.tempo))")
-                // Konten latihan lainnya nanti di sini
+            PracticeScreenLayout(activeTab: .pushUp, beat: beat, onNext: {
+                router.navigate(to: .moonWalk)
+            }) {
+                VStack {
+                    Text("Push Up Content Goes Here")
+                        .font(.headline)
+                        .foregroundStyle(.primaryDarkBrown)
+                }
+            }
+            .onDisappear {
+                beat.stop()
             }
             
+            if !isExerciseActive {
+                CountdownMessage(type: .fingerPushUp, tempo: beat.bpm) {
+                    withAnimation {
+                        isExerciseActive = true
+                    }
+                    beat.start()
+                }
+            }
         }
-        
     }
 }
 
 #Preview {
-    FingerPushUpScreen(chordA: aMajor, chordB: dMajor)
-        .environment(MetronomeManager())
+    FingerPushUpScreen()
+        .environmentObject(PracticeRouter())
 }

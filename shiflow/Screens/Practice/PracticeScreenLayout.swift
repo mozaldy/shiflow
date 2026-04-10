@@ -7,37 +7,25 @@
 
 import SwiftUI
 
-enum PracticeTab: String, CaseIterable {
-    case pushUp = "Push Up"
-    case moonWalk = "Moon Walk"
-    case rapidFire = "Rapid Fire"
-}
-
 struct PracticeScreenLayout<Content: View>: View {
     let activeTab: PracticeTab
-    let onNext: () -> Void
-    let onDismiss: () -> Void
+    var beat: BeatTimer?
+    var onNext: () -> Void = {}
     @ViewBuilder let content: () -> Content
 
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                // Tab bar
-                HStack(spacing: 20) {
-                    ForEach(PracticeTab.allCases, id: \.self) { tab in
-                        Button(tab.rawValue) { }
-                            .foregroundStyle(tab == activeTab ? .primaryDarkBrown : .primaryLightBrown)
-                    }
+                PracticeTabHeader(activeTab: activeTab)
+                if let beat {
+                    RepCounter(beat: beat)
                 }
-                .frame(maxWidth: .infinity, maxHeight: 50)
 
-                // Screen-specific content
                 content()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-            // Dismiss button (top-left)
             VStack {
                 HStack {
                     Button(action: onDismiss) {
@@ -50,7 +38,6 @@ struct PracticeScreenLayout<Content: View>: View {
             }
             .ignoresSafeArea()
 
-            // Next button (bottom-right)
             VStack {
                 Spacer()
                 HStack {
@@ -60,5 +47,11 @@ struct PracticeScreenLayout<Content: View>: View {
             }
             .ignoresSafeArea()
         }
+    }
+}
+
+#Preview{
+    PracticeScreenLayout (activeTab: .rapidFire) {
+        Text("Hello")
     }
 }
