@@ -14,17 +14,28 @@ struct FingerPositionScreen: View {
 
     var body: some View {
         VStack {
-            VStack(spacing: 10) {
+            VStack(spacing: 8) {
 
                 Text(title)
-                    .font(.largeTitle)
+                    .font(.title)
                     .bold()
 
                 Text("Detail content for \(title)")
                     .foregroundStyle(.secondary)
             }
-            .padding(.top)
+            .padding(.vertical)
 
+            HStack(spacing: 80) {
+                Image("am_chord")
+                    .resizable()
+                    .scaledToFit()
+
+                Image("HandCount")
+                    .resizable()
+                    .scaledToFit()
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
             Spacer()
 
             HStack {
