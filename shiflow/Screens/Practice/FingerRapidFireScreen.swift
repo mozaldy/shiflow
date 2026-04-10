@@ -34,52 +34,62 @@ struct FingerRapidFireScreen: View {
         beatInBar == 1
     }
 
+    @State private var isExerciseActive = false
+
     var body: some View {
-        PracticeScreenLayout(activeTab: .rapidFire, beat: beat) {
-            VStack {
+        ZStack {
+            PracticeScreenLayout(activeTab: .rapidFire, beat: beat) {
+                VStack {
 
-                HStack(spacing: 0) {
-                    // Chord A column
-                    VStack(spacing: 8) {
-                        Text(chordA.name)
-                            .font(.subheadline)
-                            .foregroundStyle(isChordAActive ? .primaryDarkBrown : .primaryLightBrown)
-                        TabsGuitar(chord: chordA, isActive: isChordAActive)
-                        StrumGuitar(chord: chordA, isActive: isChordAActive, strumTrigger: strumTriggerA, isDownStrum: barIndex % 2 == 0)
-                    }
+                    HStack(spacing: 0) {
+                        // Chord A column
+                        VStack(spacing: 8) {
+                            Text(chordA.name)
+                                .font(.subheadline)
+                                .foregroundStyle(isChordAActive ? .primaryDarkBrown : .primaryLightBrown)
+                            TabsGuitar(chord: chordA, isActive: isChordAActive)
+                            StrumGuitar(chord: chordA, isActive: isChordAActive, strumTrigger: strumTriggerA, isDownStrum: barIndex % 2 == 0)
+                        }
 
-                    
-                    VStack {
-                    BeatIndicator(currentBeat: beatInBar, totalBeats: beatsPerBar, isPlaying: beat.isPlaying)
-                    
-                    BPMControls(beat: beat)
+                        
+                        VStack {
+                        BeatIndicator(currentBeat: beatInBar, totalBeats: beatsPerBar, isPlaying: beat.isPlaying)
+                        
+                        BPMControls(beat: beat)
+                        }
+                        // Chord B column
+                        VStack(spacing: 8) {
+                            Text(chordB.name)
+                                .font(.subheadline)
+                                .foregroundStyle(!isChordAActive ? .primaryDarkBrown : .primaryLightBrown)
+                            TabsGuitar(chord: chordB, isActive: !isChordAActive)
+                            StrumGuitar(chord: chordB, isActive: !isChordAActive, strumTrigger: strumTriggerB, isDownStrum: barIndex % 2 == 0)
+                        }
                     }
-                    // Chord B column
-                    VStack(spacing: 8) {
-                        Text(chordB.name)
-                            .font(.subheadline)
-                            .foregroundStyle(!isChordAActive ? .primaryDarkBrown : .primaryLightBrown)
-                        TabsGuitar(chord: chordB, isActive: !isChordAActive)
-                        StrumGuitar(chord: chordB, isActive: !isChordAActive, strumTrigger: strumTriggerB, isDownStrum: barIndex % 2 == 0)
+                    .environment(\.guitarSize, .small)
+
+
+                }
+                .padding()
+                .onDisappear {
+                    beat.stop()
+                }
+                .onChange(of: beat.beatCount) {
+                    guard isFirstBeatOfBar else { return }
+                    if isChordAActive {
+                        strumTriggerA += 1
+                    } else {
+                        strumTriggerB += 1
                     }
                 }
-                .environment(\.guitarSize, .small)
-
-
             }
-            .padding()
-            .onAppear {
-                beat.start()
-            }
-            .onDisappear {
-                beat.stop()
-            }
-            .onChange(of: beat.beatCount) {
-                guard isFirstBeatOfBar else { return }
-                if isChordAActive {
-                    strumTriggerA += 1
-                } else {
-                    strumTriggerB += 1
+            
+            if !isExerciseActive {
+                CountdownMessage(type: .rapidFire, tempo: beat.bpm) {
+                    withAnimation {
+                        isExerciseActive = true
+                    }
+                    beat.start()
                 }
             }
         }
@@ -88,4 +98,5 @@ struct FingerRapidFireScreen: View {
 
 #Preview {
     FingerRapidFireScreen()
+        .environmentObject(PracticeRouter())
 }

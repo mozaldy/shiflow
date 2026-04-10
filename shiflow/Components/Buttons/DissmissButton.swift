@@ -8,15 +8,20 @@
 import Foundation
 import SwiftUI
 struct DissmissButton: View {
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
-        Image(systemName: "xmark")
-            .padding(10)
-            .background(Color.primaryDarkBrown)
-            .foregroundStyle(.white)
-            .clipShape(Circle())
-            .bold()
-            .shadow(radius: 3)
+        Button(action: {
+            dismiss()
+        }) {
+            Image(systemName: "xmark")
+                .padding(10)
+                .background(Color.primaryDarkBrown)
+                .foregroundStyle(.white)
+                .clipShape(Circle())
+                .bold()
+                .shadow(radius: 3)
+        }
     }
 }
 
