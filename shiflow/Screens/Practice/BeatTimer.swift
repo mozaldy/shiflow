@@ -2,8 +2,9 @@
 //  BeatTimer.swift
 //  shiflow
 //
-//  Created by Antigravity on 09/04/26.
+//  Created by Theressa Natasha Thebez on 10/04/26.
 //
+
 
 internal import Combine
 import SwiftUI
