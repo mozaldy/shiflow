@@ -8,18 +8,19 @@
 import SwiftUI
 
 struct FingerMoonWalkScreen: View {
+    @Environment(MetronomeManager.self) private var metronome
     @StateObject private var beat = BeatTimer(bpm: 60)
 
     @State private var strumTriggerA: Int = 0
     @State private var strumTriggerB: Int = 0
-
-    let chordA = aMinor
-    let chordB = dMajor
+    
+    let chordA: Chord
+    let chordB: Chord
 
     private let beatsPerBar: Int = 4
 
     private var barIndex: Int {
-        (beat.beatCount - 1) / beatsPerBar
+        max(0, (metronome.beatCount - 1) / metronome.beatsPerMeasure)
     }
 
     private var isChordAActive: Bool {
@@ -27,7 +28,7 @@ struct FingerMoonWalkScreen: View {
     }
 
     private var beatInBar: Int {
-        ((beat.beatCount - 1) % beatsPerBar) + 1
+        metronome.currentBeat
     }
 
     private var isFirstBeatOfBar: Bool {
@@ -91,7 +92,7 @@ struct FingerMoonWalkScreen: View {
                 }
             }
         }
-    }
+    
 }
 
 #Preview {

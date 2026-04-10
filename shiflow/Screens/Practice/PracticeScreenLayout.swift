@@ -28,7 +28,10 @@ struct PracticeScreenLayout<Content: View>: View {
 
             VStack {
                 HStack {
-                    DissmissButton().padding(25)
+                    Button(action: onDismiss) {
+                        DissmissButton()
+                    }
+                    .padding(25)
                     Spacer()
                 }
                 Spacer()

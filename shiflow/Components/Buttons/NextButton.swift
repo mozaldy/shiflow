@@ -8,8 +8,8 @@
 import Foundation
 import SwiftUI
 struct NextButton: View {
-    var action: () -> Void = {}
-
+    var action: () -> Void
+    
     var body: some View {
         Button(action: action) {
             Image(systemName: "chevron.right")
@@ -24,5 +24,5 @@ struct NextButton: View {
 }
 
 #Preview {
-    NextButton()
+    //NextButton()
 }
