@@ -15,17 +15,21 @@ struct PushUpScreen: View {
 
     var body: some View {
         VStack {
-            VStack(spacing: 10) {
+            Text(title)
+                .font(.largeTitle)
+                .bold()
+                .padding(.vertical)
 
-                Text(title)
-                    .font(.largeTitle)
-                    .bold()
+            HStack(spacing: 80) {
+                Image("am_chord")
+                    .resizable()
+                    .frame(width: 300, height: 200)
 
-                Text("Detail content for \(title)")
-                    .foregroundStyle(.secondary)
+                Image("am_strum")
+                    .resizable()
+                    .frame(width: 300, height: 200)
             }
-            .padding(.top)
-
+            
             Spacer()
 
             HStack {

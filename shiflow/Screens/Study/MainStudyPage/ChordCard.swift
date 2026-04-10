@@ -19,8 +19,7 @@ struct ChordCard: View {
                     Image(imageName)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 190, height: 190)
-                        .background(Color.primaryDarkBrown)
+                        .frame(width: 200, height: 150)
                         .cornerRadius(8)
 
                     Text(title)

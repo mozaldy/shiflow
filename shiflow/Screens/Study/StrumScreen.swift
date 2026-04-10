@@ -15,16 +15,21 @@ struct StrumScreen: View {
 
     var body: some View {
         VStack {
-            VStack(spacing: 10) {
 
-                Text(title)
-                    .font(.largeTitle)
-                    .bold()
+            Text(title)
+                .font(.largeTitle)
+                .bold()
+                .padding(.vertical)
 
-                Text("Detail content for \(title)")
-                    .foregroundStyle(.secondary)
+            HStack(spacing: 80) {
+                Image("am_chord")
+                    .resizable()
+                    .frame(width: 300, height: 200)
+
+                Image("am_strum")
+                    .resizable()
+                    .frame(width: 300, height: 200)
             }
-            .padding(.top)
 
             Spacer()
 
