@@ -9,23 +9,15 @@ import Foundation
 import SwiftUI
 
 struct StrumScreen: View {
+    @Environment(MetronomeManager.self) private var metronome
+    
     @Binding var path: NavigationPath
     var title: String
     var chord: String
     @State private var showExitDialog = false
 
-    @StateObject private var beat = BeatTimer(bpm: 80)
     @State private var strumTrigger: Int = 0
     let chords = aMinor
-    private let beatsPerBar = 4
-
-    private var beatInBar: Int {
-        ((beat.beatCount - 1) % beatsPerBar) + 1
-    }
-
-    private var isFirstBeatOfBar: Bool {
-        beatInBar == 1
-    }
 
     var body: some View {
         VStack {
@@ -72,14 +64,16 @@ struct StrumScreen: View {
         .padding()
         .navigationBarBackButtonHidden(true)
         .onAppear {
-            beat.start()
+//            beat.start()
+            metronome.startMetronome()
         }
         .onDisappear {
-            beat.stop()
+//            beat.stop()
+            metronome.stopMetronome()
         }
 
-        .onChange(of: beat.beatCount) {
-            guard isFirstBeatOfBar else { return }
+        .onChange(of: metronome.beatCount) {
+            guard metronome.isFirstBeatOfBar else { return }
             strumTrigger += 1
         }
         .exitDialog(
@@ -102,4 +96,5 @@ struct StrumScreen: View {
         ),
         title: "How to Strum", chord: "am_chord"
     )
+    .environment(MetronomeManager())
 }

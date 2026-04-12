@@ -9,35 +9,17 @@ import Foundation
 import SwiftUI
 
 struct PushUpScreen: View {
+    @Environment(MetronomeManager.self) private var metronome
     @Binding var path: NavigationPath
+    
     var title: String
     @State private var showExitDialog = false
     @State private var showFinger = false
     var chord: String
 
-    @StateObject private var beat = BeatTimer(bpm: 60)
-
     @State private var strumTriggerA: Int = 0
 
     let chordA = aMinor
-
-    private let beatsPerBar: Int = 4
-
-    private var barIndex: Int {
-        (beat.beatCount - 1) / beatsPerBar
-    }
-
-    private var isChordAActive: Bool {
-        barIndex % 2 == 0
-    }
-
-    private var beatInBar: Int {
-        ((beat.beatCount - 1) % beatsPerBar) + 1
-    }
-
-    private var isFirstBeatOfBar: Bool {
-        beatInBar == 1
-    }
 
     var body: some View {
         VStack {
@@ -71,24 +53,24 @@ struct PushUpScreen: View {
 
                     VStack(spacing: 24) {
                         BeatIndicator(
-                            currentBeat: beatInBar,
-                            totalBeats: beatsPerBar,
-                            isPlaying: beat.isPlaying
+                            currentBeat: metronome.beatInBar,
+                            totalBeats: metronome.beatsPerMeasure,
+                            isPlaying: metronome.isPlaying
                         )
-                        BPMControls(beat: beat)
+                        TempoView(manager: metronome)
                     }
                 }
 
             }
             .onAppear {
-                beat.start()
+                metronome.startBeat()
             }
             .onDisappear {
-                beat.stop()
+                metronome.stopBeat()
             }
-            .onChange(of: beat.beatCount) {
-                guard isFirstBeatOfBar else { return }
-                if isChordAActive {
+            .onChange(of: metronome.beatCount) {
+                guard metronome.isFirstBeatOfBar else { return }
+                if metronome.isEvenBar {
                     strumTriggerA += 1
                 }
 
@@ -140,4 +122,5 @@ struct PushUpScreen: View {
         title: "Finger Push Up",
         chord: "am"
     )
+    .environment(MetronomeManager())
 }

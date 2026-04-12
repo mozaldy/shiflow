@@ -14,7 +14,7 @@ struct PracticeTabHeader: View {
             ForEach(PracticeTab.allCases, id: \.self) { tab in
                 let isActive = tab == activeTab
                 
-                Button(tab.rawValue) { 
+                Button(tab.rawValue) {
                     // To do: wire up navigation if needed later
                 }
                 .padding(.horizontal, 16)

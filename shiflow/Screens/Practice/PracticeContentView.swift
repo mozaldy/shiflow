@@ -26,19 +26,19 @@ struct PracticeContentView: View {
 
 struct PracticeFlowContainer: View {
     @EnvironmentObject private var router: PracticeRouter
-    @StateObject private var pushUpBeat = BeatTimer(bpm: 60)
-    @StateObject private var moonWalkBeat = BeatTimer(bpm: 60)
-    @StateObject private var rapidFireBeat = BeatTimer(bpm: 80)
+//    @StateObject private var pushUpBeat = BeatTimer(bpm: 60)
+//    @StateObject private var moonWalkBeat = BeatTimer(bpm: 60)
+//    @StateObject private var rapidFireBeat = BeatTimer(bpm: 80)
     
     var body: some View {
         Group {
             switch router.activeTab {
             case .pushUp:
-                FingerPushUpScreen(chordA: aMinor, chordB: dMajor, beat: pushUpBeat)
+                FingerPushUpScreen(chordA: aMinor, chordB: dMajor)
             case .moonWalk:
-                FingerMoonWalkScreen(beat: moonWalkBeat, chordA: aMinor, chordB: dMajor)
+                FingerMoonWalkScreen(chordA: aMinor, chordB: dMajor)
             case .rapidFire:
-                FingerRapidFireScreen(beat: rapidFireBeat, chordA: aMinor, chordB: dMajor)
+                FingerRapidFireScreen(chordA: aMinor, chordB: dMajor)
             }
         }
     }
