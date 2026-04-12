@@ -8,18 +8,13 @@
 import SwiftUI
 
 struct FingerPushUpScreen: View {
-    let chordA: Chord
-    let chordB: Chord
-    @ObservedObject var beat: BeatTimer
+    @Environment(MetronomeManager.self) private var metronome
 
     @State private var showFinger = false
     @State private var fingerToggleTimer: Timer?
 
-    private let beatsPerBar: Int = 4
-
-    private var beatInBar: Int {
-        ((beat.beatCount - 1) % beatsPerBar) + 1
-    }
+    let chordA: Chord
+    let chordB: Chord
 
     private var chordImageName: String {
         switch chordA.id.lowercased() {
@@ -53,11 +48,11 @@ struct FingerPushUpScreen: View {
 
             VStack(spacing: 24) {
                 BeatIndicator(
-                    currentBeat: beatInBar,
-                    totalBeats: beatsPerBar,
-                    isPlaying: beat.isPlaying
+                    currentBeat: metronome.beatInBar,
+                    totalBeats: metronome.beatsPerMeasure,
+                    isPlaying: metronome.isPlaying
                 )
-                BPMControls(beat: beat)
+                TempoView(manager: metronome)
             }
         }
         .onAppear {
@@ -84,5 +79,6 @@ struct FingerPushUpScreen: View {
 }
 
 #Preview {
-    FingerPushUpScreen(chordA: aMinor, chordB: dMajor, beat: BeatTimer(bpm: 60))
+    FingerPushUpScreen(chordA: aMinor, chordB: dMajor)
+        .environment(MetronomeManager())
 }

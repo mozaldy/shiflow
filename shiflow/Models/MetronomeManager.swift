@@ -18,9 +18,27 @@ class MetronomeManager {
     
     var isPlaying: Bool = false
     
+    var barIndex: Int {
+        max(0, (self.beatCount - 1) / self.beatsPerMeasure)
+    }
+    
+    var beatInBar: Int {
+        guard self.beatCount > 0 else { return 0 }
+        return ((self.beatCount - 1) % self.beatsPerMeasure) + 1
+    }
+    
+    var isFirstBeatOfBar: Bool {
+        beatInBar == 1
+    }
+    
+    var isEvenBar: Bool {
+        barIndex % 2 == 0
+    }
+    
     private var timer: Timer?
     private var highTickPlayer: AVAudioPlayer?
     private var lowTickPlayer: AVAudioPlayer?
+    private var beatPlayer: AVAudioPlayer?
     private var debounceTask: Task<Void, Never>? = nil
     
     init() {
@@ -30,16 +48,20 @@ class MetronomeManager {
     func setupAudioPlayer() {
         // Try-catch
         guard let highURL = Bundle.main.url(forResource: "tick1", withExtension: "mp3"),
-              let lowURL = Bundle.main.url(forResource: "tick2", withExtension: "mp3") else {
+              let lowURL = Bundle.main.url(forResource: "tick2", withExtension: "mp3"),
+            let beatURL = Bundle.main.url(forResource: "beat", withExtension: "mp3") else {
             print("Suara tidak ditemukan")
             return
         }
         do {
             highTickPlayer = try AVAudioPlayer(contentsOf: highURL)
             lowTickPlayer = try AVAudioPlayer(contentsOf: lowURL)
+            beatPlayer = try AVAudioPlayer(contentsOf: beatURL)
+            beatPlayer?.numberOfLoops = -1
             
             highTickPlayer?.prepareToPlay()
             lowTickPlayer?.prepareToPlay()
+            beatPlayer?.prepareToPlay()
         } catch {
             print("Gagal memuat audio player: \(error)")
         }
@@ -53,6 +75,19 @@ class MetronomeManager {
             self.playTick()
         }
         isPlaying = true
+    }
+    
+    func startBeat() {
+        beatPlayer?.play()
+    }
+    
+    func stopBeat() {
+        beatPlayer?.stop()
+        beatPlayer?.currentTime = 0
+    }
+    
+    func pauseBeat() {
+        beatPlayer?.stop()
     }
     
     private func playTick() {
@@ -109,5 +144,39 @@ class MetronomeManager {
         isPlaying = false
     }
     
+}
+
+struct TempoView: View {
+    var manager: MetronomeManager
     
+    var body: some View {
+        VStack(spacing: 12) {
+            Text("\(Int(manager.tempo)) BPM")
+                .font(.title2)
+                .fontWeight(.bold)
+                .foregroundStyle(.primaryDarkBrown)
+                .multilineTextAlignment(.center)
+                .frame(width: 50)
+        }
+        .padding(.horizontal, 30)
+    }
+}
+
+struct BeatIndicator: View {
+    let currentBeat: Int
+    let totalBeats: Int
+    let isPlaying: Bool
+    var body: some View {
+        VStack(spacing: 12) {
+            ForEach(1...totalBeats, id: \.self) { beat in
+                let isActive = isPlaying && beat == currentBeat
+                let isDownbeat = beat == 1
+                Circle()
+                    .fill(isActive ? (isDownbeat ? Color.primaryDarkBrown : Color.primaryLightBrown) : Color.primaryLightBrown.opacity(0.3))
+                    .frame(width: isDownbeat ? 20 : 14, height: isDownbeat ? 20 : 14)
+                    .scaleEffect(isActive ? 1.2 : 1.0)
+                    .animation(.spring(duration: 0.1), value: isActive)
+            }
+        }
+    }
 }

@@ -160,7 +160,7 @@ struct MainScreen: View {
         }
         .fullScreenCover(isPresented: $showingExercise) {
             if let left = leftChord, let right = rightChord {
-                    ExerciseContainerView(chordA: left, chordB: right)
+                    ExerciseContainerView(isPresented: $showingExercise, chordA: left, chordB: right)
                     .environment(metronome)
                 }
         }
