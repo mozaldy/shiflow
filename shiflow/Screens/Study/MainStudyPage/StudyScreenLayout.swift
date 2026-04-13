@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 struct MainStudyScreen: View {
+    @Environment(\.dismiss) private var dismiss
     @Binding var path: NavigationPath
     @State var selectedChord: String
 
@@ -18,7 +19,7 @@ struct MainStudyScreen: View {
         VStack(spacing: 20) {
             HStack {
                 Button {
-                    path = NavigationPath()
+                    dismiss()
                 } label: {
                     Image(systemName: "arrow.backward")
                         .padding(.horizontal, 16)
@@ -81,6 +82,18 @@ struct MainStudyScreen: View {
             .frame(maxWidth: .infinity, alignment: .center)
         }
         .navigationBarBackButtonHidden(true)
+        .navigationDestination(for: String.self) { value in
+            if value.contains("finger") {
+                let chord = value == "finger" ? selectedChord : value.replacingOccurrences(of: "finger-", with: "")
+                FingerPositionScreen(path: $path, title: "Finger Position", chord: chord)
+            } else if value.contains("pushup") {
+                let chord = value.replacingOccurrences(of: "pushup-", with: "")
+                PushUpScreen(path: $path, title: "Finger Push Up", chord: chord)
+            } else if value.contains("strum") {
+                let chord = value.replacingOccurrences(of: "strum-", with: "")
+                StrumScreen(path: $path, title: "How to Strum", chord: chord)
+            }
+        }
     }
 }
 
