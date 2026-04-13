@@ -162,7 +162,7 @@ struct TempoSettingsView: View {
         }
         .onAppear {
             originalTempo = metronome.tempo
-            metronome.startMetronome()
+            metronome.startMetronomeOnly()
             draftTempo = metronome.tempo
         }
         .onDisappear {

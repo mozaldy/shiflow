@@ -77,8 +77,10 @@ struct MainScreen: View {
                         }
                     
                     VStack(alignment: .center) {
-                        Button("",systemImage: "metronome.fill") {
+                        Button() {
                             showingTempoSettings = true
+                        } label: {
+                            Image(systemName: "metronome.fill")
                         }
                         .font(.title)
                         .buttonStyle(.glassProminent)
@@ -131,11 +133,15 @@ struct MainScreen: View {
                 }
                 
                 HStack {
-                    Button("", systemImage: "books.vertical.circle.fill") {
+                    Button("Study", systemImage: "books.vertical") {
                         showingStudyChord = true
                     }
-                    .font(.title)
+                    .font(.callout)
+                    .imageScale(.large)
+                    .buttonStyle(.bordered)
                     .foregroundStyle(.primaryDarkBrown)
+                    
+                    
                     
                     Spacer()
                     
