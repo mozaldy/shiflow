@@ -35,6 +35,10 @@ struct coba: View {
                     resetSound()
                 }
                 .buttonStyle(.bordered)
+                
+//                Button("Play beat n metronome") {
+//                    metronome.startMetronome()
+//                }
             }
             .onAppear {
                 preparePlayer()
