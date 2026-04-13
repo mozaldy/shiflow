@@ -40,7 +40,6 @@ struct ExerciseContainerView: View {
                     onNext: moveToNextStep,
                     onDismiss: {
                         metronome.pauseMetronome()
-                        metronome.stopBeat()
                         showingExitDialog = true
                     }
                 ) {
@@ -54,7 +53,6 @@ struct ExerciseContainerView: View {
                     ) {
                         withAnimation { isCountingDown = false }
                         metronome.startMetronome()
-                        metronome.startBeat()
                     }
                 }
             }
@@ -66,20 +64,17 @@ struct ExerciseContainerView: View {
             isPresented: $showingExitDialog,
             onExit: {
                 metronome.stopMetronome()
-                metronome.stopBeat()
                 isPresented = false
             },
             onCancel: {
                 showingExitDialog = false
                 metronome.startMetronome()
-                metronome.startBeat()
             })
     }
         
     
     private func startNextStep(_ next: PracticeTab) {
         metronome.stopMetronome() // Berhenti
-        metronome.stopBeat()
         currentTab = next
         isCountingDown = true // Muncul countdown lagi
     }
@@ -94,7 +89,6 @@ struct ExerciseContainerView: View {
     
     private func moveToNextStep() {
         metronome.stopMetronome()
-        metronome.stopBeat()
         
         let allSteps = PracticeTab.allCases
         if let currentIndex = allSteps.firstIndex(of: currentTab) {

@@ -16,6 +16,8 @@ class MetronomeManager {
     var currentBeat: Int = 0
     var beatCount: Int = 0
     
+    let originalBeatBpm: Double = 115.0
+    
     var isPlaying: Bool = false
     
     var barIndex: Int {
@@ -45,6 +47,10 @@ class MetronomeManager {
         setupAudioPlayer()
     }
     
+    private func calculateRate() -> Float {
+        return Float(tempo / originalBeatBpm)
+    }
+    
     func setupAudioPlayer() {
         // Try-catch
         guard let highURL = Bundle.main.url(forResource: "tick1", withExtension: "mp3"),
@@ -57,6 +63,9 @@ class MetronomeManager {
             highTickPlayer = try AVAudioPlayer(contentsOf: highURL)
             lowTickPlayer = try AVAudioPlayer(contentsOf: lowURL)
             beatPlayer = try AVAudioPlayer(contentsOf: beatURL)
+            
+            beatPlayer?.enableRate = true
+            beatPlayer?.rate = calculateRate()
             beatPlayer?.numberOfLoops = -1
             
             highTickPlayer?.prepareToPlay()
@@ -69,6 +78,17 @@ class MetronomeManager {
     
     func startMetronome() {
         stopMetronome()
+        startBeat()
+        let interval = 60.0/tempo
+        
+        timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { _ in
+            self.playTick()
+        }
+        isPlaying = true
+    }
+    
+    func startMetronomeOnly() {
+        stopMetronome()
         let interval = 60.0/tempo
         
         timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { _ in
@@ -78,6 +98,7 @@ class MetronomeManager {
     }
     
     func startBeat() {
+        beatPlayer?.currentTime = 0
         beatPlayer?.play()
     }
     
@@ -87,12 +108,18 @@ class MetronomeManager {
     }
     
     func pauseBeat() {
-        beatPlayer?.stop()
+        beatPlayer?.pause()
     }
     
     private func playTick() {
         beatCount += 1
         // Update currentBeat -> play high and low tick
+        
+        // play beat exactly on the first beat
+        if beatCount == 1 {
+            startBeat()
+        }
+        
         currentBeat += 1
         if currentBeat > beatsPerMeasure {
             // reset current beat
@@ -136,12 +163,14 @@ class MetronomeManager {
         isPlaying = false
         currentBeat = 0
         beatCount = 0
+        stopBeat()
     }
     
     func pauseMetronome() {
         timer?.invalidate()
         timer = nil
         isPlaying = false
+        pauseBeat()
     }
     
 }
