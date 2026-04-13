@@ -12,9 +12,9 @@ struct MainStudyScreen: View {
     @Environment(\.dismiss) private var dismiss
     @Binding var path: NavigationPath
     @State var selectedChord: String
-    
+
     let chords = ["Am", "C", "D", "F", "Em", "G"]
-    
+
     var body: some View {
         VStack(spacing: 20) {
             HStack {
@@ -23,7 +23,7 @@ struct MainStudyScreen: View {
                 } label: {
                     BackButton()
                 }
-                
+
                 Picker("Chord", selection: $selectedChord) {
                     ForEach(chords, id: \.self) { chord in
                         Text(chord)
@@ -35,7 +35,7 @@ struct MainStudyScreen: View {
             }
             .padding(.top, 10)
             .padding(.leading, -75)
-            
+
             HStack(spacing: 22) {
                 ChordCard(
                     imageName: getChordImage(type: "finger"),
@@ -44,7 +44,7 @@ struct MainStudyScreen: View {
                         path.append("finger-\(selectedChord)")
                     }
                 )
-                
+
                 ChordCard(
                     imageName: getChordImage(type: "exercise"),
                     title: "Finger Push Up Exercise",
@@ -52,7 +52,7 @@ struct MainStudyScreen: View {
                         path.append("pushup-\(selectedChord)")
                     }
                 )
-                
+
                 ChordCard(
                     imageName: getChordImage(type: "strum"),
                     title: "How to Strum",
@@ -62,7 +62,7 @@ struct MainStudyScreen: View {
                 )
             }
             .frame(maxWidth: .infinity, alignment: .center)
-            
+
             Button {
                 path.append("finger")
             } label: {
@@ -80,8 +80,15 @@ struct MainStudyScreen: View {
         .navigationBarBackButtonHidden(true)
         .navigationDestination(for: String.self) { value in
             if value.contains("finger") {
-                let chord = value == "finger" ? selectedChord : value.replacingOccurrences(of: "finger-", with: "")
-                FingerPositionScreen(path: $path, title: "Finger Position", chord: chord)
+                let chord =
+                    value == "finger"
+                    ? selectedChord
+                    : value.replacingOccurrences(of: "finger-", with: "")
+                FingerPositionScreen(
+                    path: $path,
+                    title: "Finger Position",
+                    chord: chord
+                )
             } else if value.contains("pushup") {
                 let chord = value.replacingOccurrences(of: "pushup-", with: "")
                 PushUpScreen(path: $path, title: "Finger Push Up", chord: chord)
