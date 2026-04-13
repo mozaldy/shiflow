@@ -16,6 +16,8 @@ class MetronomeManager {
     var currentBeat: Int = 0
     var beatCount: Int = 0
     
+    private var isMetronomeOnly: Bool = false
+    
     let originalBeatBpm: Double = 115.0
     
     var isPlaying: Bool = false
@@ -55,7 +57,7 @@ class MetronomeManager {
         // Try-catch
         guard let highURL = Bundle.main.url(forResource: "tick1", withExtension: "mp3"),
               let lowURL = Bundle.main.url(forResource: "tick2", withExtension: "mp3"),
-            let beatURL = Bundle.main.url(forResource: "beat", withExtension: "mp3") else {
+            let beatURL = Bundle.main.url(forResource: "beat-115", withExtension: "wav") else {
             print("Suara tidak ditemukan")
             return
         }
@@ -77,8 +79,8 @@ class MetronomeManager {
     }
     
     func startMetronome() {
+        isMetronomeOnly = false
         stopMetronome()
-        startBeat()
         let interval = 60.0/tempo
         
         timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { _ in
@@ -88,6 +90,7 @@ class MetronomeManager {
     }
     
     func startMetronomeOnly() {
+        isMetronomeOnly = true
         stopMetronome()
         let interval = 60.0/tempo
         
@@ -116,7 +119,7 @@ class MetronomeManager {
         // Update currentBeat -> play high and low tick
         
         // play beat exactly on the first beat
-        if beatCount == 1 {
+        if beatCount == 1 && !isMetronomeOnly{
             startBeat()
         }
         
@@ -141,6 +144,8 @@ class MetronomeManager {
         // Batalin task lama, tunggu 0.1s, trus panggil lagi startMetronome
         tempo = newTempo
         
+        beatPlayer?.rate = calculateRate()
+        
         debounceTask?.cancel()
         
         //Buat task baru tapi tunggu 0.1s
@@ -149,7 +154,9 @@ class MetronomeManager {
             if Task.isCancelled { return }
             
             // kalau sedang berbunyi, restart dengan tempo baru
-            if isPlaying {
+            if isPlaying && isMetronomeOnly {
+                startMetronomeOnly()
+            } else if isPlaying {
                 startMetronome()
             }
         }

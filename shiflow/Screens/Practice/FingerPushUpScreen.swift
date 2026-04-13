@@ -11,7 +11,7 @@ struct FingerPushUpScreen: View {
     @Environment(MetronomeManager.self) private var metronome
 
     @State private var showFinger = false
-    @State private var fingerToggleTimer: Timer?
+//    @State private var fingerToggleTimer: Timer?
 
     let chordA: Chord
     let chordB: Chord
@@ -55,26 +55,11 @@ struct FingerPushUpScreen: View {
                 TempoView(manager: metronome)
             }
         }
-        .onAppear {
-            startFingerToggleTimer()
-        }
-        .onDisappear {
-            stopFingerToggleTimer()
-        }
-    }
-
-    private func startFingerToggleTimer() {
-        fingerToggleTimer?.invalidate()
-        fingerToggleTimer = Timer.scheduledTimer(withTimeInterval: 4, repeats: true) { _ in
-            withAnimation {
+        .onChange(of: metronome.beatCount) {
+            if metronome.isFirstBeatOfBar {
                 showFinger.toggle()
             }
         }
-    }
-
-    private func stopFingerToggleTimer() {
-        fingerToggleTimer?.invalidate()
-        fingerToggleTimer = nil
     }
 }
 
