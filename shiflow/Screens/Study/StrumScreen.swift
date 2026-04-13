@@ -38,8 +38,7 @@ struct StrumScreen: View {
                 StrumGuitar(
                     chord: chords,
                     isActive: true,
-                    strumTrigger: strumTrigger,
-                    isDownStrum: true
+                    strumTrigger: strumTrigger
                 )
 
             }

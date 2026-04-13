@@ -12,7 +12,6 @@ struct StrumGuitar: View {
     var isActive: Bool
     var strumTrigger: Int
 
-    var isDownStrum: Bool = true
 
     var body: some View {
         VStack(spacing: 0) {
@@ -21,8 +20,7 @@ struct StrumGuitar: View {
                     guitarString: guitarString,
                     isGuitarStringStrummed: chord.isStringStrummed(for: guitarString),
                     index: index,
-                    strumTrigger: strumTrigger,
-                    isDownStrum: isDownStrum
+                    strumTrigger: strumTrigger
                 )
             }
         }
@@ -38,7 +36,6 @@ struct GuitarStringRow: View {
     var isGuitarStringStrummed: Bool
     var index: Int
     var strumTrigger: Int
-    var isDownStrum: Bool
 
     @State private var isFlashingGreen: Bool = false
 
@@ -57,10 +54,8 @@ struct GuitarStringRow: View {
 
     private func triggerFlash() {
         Task {
-            let maxIndex = GuitarString.allCases.count - 1
-            let delayMultiplier = isDownStrum ? index : (maxIndex - index)
             let staggerDuration: Double = 0.05
-            let totalDelay = Double(delayMultiplier) * staggerDuration
+            let totalDelay = Double(index) * staggerDuration
 
             try? await Task.sleep(nanoseconds: UInt64(totalDelay * 1_000_000_000))
 
