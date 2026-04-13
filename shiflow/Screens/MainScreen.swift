@@ -52,29 +52,7 @@ struct MainScreen: View {
                     .padding(.bottom, 16)
                 
                 HStack(alignment: .center ,spacing: 20){
-                    Button("", systemImage: "trash"){
-                        leftChord = nil
-                    }
-                    .offset(y: -90)
-                    .foregroundStyle(.primaryDarkBrown)
-                    .opacity(leftChord == nil ? 0 : 1)
-                    
-                    RoundedRectangle(cornerSize: CGSize(width: 30, height: 30), style: .circular)
-                        .frame(maxWidth: 250, maxHeight: 225)
-                        .foregroundStyle(.primaryLightBrown)
-                        .overlay {
-                            if let chord = leftChord {
-                                    Text(chord.id)
-                                        .font(.largeTitle)
-                                        .fontWeight(.heavy)
-                                        .foregroundStyle(.primaryDarkBrown)
-                                } else {
-                                    Text("Select a chord")
-                                        .font(.subheadline)
-                                        .fontWeight(.regular)
-                                        .foregroundStyle(.gray)
-                                }
-                        }
+                    MainScreenChordCard(selectedChord: $leftChord)
                     
                     VStack(alignment: .center) {
                         Button() {
@@ -94,29 +72,7 @@ struct MainScreen: View {
                     }
                     
 
-                    RoundedRectangle(cornerSize: CGSize(width: 30, height: 30), style: .circular)
-                        .frame(maxWidth: 250, maxHeight: 225)
-                        .foregroundStyle(.primaryLightBrown)
-                        .overlay {
-                            if let chord = rightChord {
-                                    Text(chord.id)
-                                        .font(.largeTitle)
-                                        .fontWeight(.heavy)
-                                        .foregroundStyle(.primaryDarkBrown)
-                                } else {
-                                    Text("Select a chord")
-                                        .font(.subheadline)
-                                        .fontWeight(.regular)
-                                        .foregroundStyle(.gray)
-                                }
-                        }
-                    
-                    Button("", systemImage: "trash"){
-                        rightChord = nil
-                    }
-                    .offset(y: -90)
-                    .foregroundStyle(.primaryDarkBrown)
-                    .opacity(rightChord == nil ? 0 : 1)
+                    MainScreenChordCard(selectedChord: $rightChord)
                 }
                 .padding(.bottom, 16)
                 
@@ -133,14 +89,20 @@ struct MainScreen: View {
                 }
                 
                 HStack {
-                    Button("Study", systemImage: "books.vertical") {
-                        showingStudyChord = true
+                    Button("Study", systemImage: "books.vertical") { showingStudyChord = true
                     }
-                    .font(.callout)
-                    .imageScale(.large)
-                    .buttonStyle(.bordered)
+                    .font(.footnote)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .background(.white)
                     .foregroundStyle(.primaryDarkBrown)
-                    
+                    .clipShape(Capsule())
+                    .bold()
+                    .overlay(
+                                Capsule()
+                                    .stroke(Color.primaryDarkBrown, lineWidth: 2)
+                            )
+
                     
                     
                     Spacer()
