@@ -43,7 +43,17 @@ struct StrumScreen: View {
                 )
 
             }
-
+            .onAppear {
+                metronome.startMetronome()
+            }
+            .onDisappear {
+                metronome.stopMetronome()
+            }
+            .onChange(of: metronome.beatCount) {
+                guard metronome.isFirstBeatOfBar else { return }
+                strumTrigger += 1
+            }
+            
             Spacer()
 
             HStack {
@@ -63,19 +73,7 @@ struct StrumScreen: View {
         }
         .padding()
         .navigationBarBackButtonHidden(true)
-        .onAppear {
-            //            beat.start()
-            metronome.startMetronome()
-        }
-        .onDisappear {
-            //            beat.stop()
-            metronome.stopMetronome()
-        }
 
-        .onChange(of: metronome.beatCount) {
-            guard metronome.isFirstBeatOfBar else { return }
-            strumTrigger += 1
-        }
     }
 }
 
