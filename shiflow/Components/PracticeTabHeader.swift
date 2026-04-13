@@ -17,8 +17,8 @@ struct PracticeTabHeader: View {
                 Button(tab.rawValue) {
                     // To do: wire up navigation if needed later
                 }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
                 .fontWeight(.semibold)
                 .foregroundStyle(isActive ? .white : .primaryDarkBrown)
                 .background(isActive ? Color.primaryDarkBrown : Color.clear)

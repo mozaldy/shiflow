@@ -27,7 +27,7 @@ struct FingerRapidFireScreen: View {
                         .font(.subheadline)
                         .foregroundStyle(metronome.isEvenBar ? .primaryDarkBrown : .primaryLightBrown)
                     TabsGuitar(chord: chordA, isActive: metronome.isEvenBar)
-                    StrumGuitar(chord: chordA, isActive: metronome.isEvenBar, strumTrigger: strumTriggerA, isDownStrum: metronome.barIndex % 2 == 0)
+                    StrumGuitar(chord: chordA, isActive: metronome.isEvenBar, strumTrigger: strumTriggerA)
                 }
 
                 
@@ -42,7 +42,7 @@ struct FingerRapidFireScreen: View {
                         .font(.subheadline)
                         .foregroundStyle(!metronome.isEvenBar ? .primaryDarkBrown : .primaryLightBrown)
                     TabsGuitar(chord: chordB, isActive: !metronome.isEvenBar)
-                    StrumGuitar(chord: chordB, isActive: !metronome.isEvenBar, strumTrigger: strumTriggerB, isDownStrum: metronome.barIndex % 2 == 0)
+                    StrumGuitar(chord: chordB, isActive: !metronome.isEvenBar, strumTrigger: strumTriggerB)
                 }
             }
             .environment(\.guitarSize, .small)
