@@ -9,10 +9,15 @@ import Foundation
 import SwiftUI
 struct DissmissButton: View {
     @Environment(\.dismiss) private var dismiss
+    var action: (() -> Void)? = nil
     
     var body: some View {
         Button(action: {
-            dismiss()
+            if let action {
+                action()
+            } else {
+                dismiss()
+            }
         }) {
             Image(systemName: "xmark")
                 .padding(10)

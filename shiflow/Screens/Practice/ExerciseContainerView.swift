@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ExerciseContainerView: View {
     @Environment(MetronomeManager.self) private var metronome
-    @Environment(\.dismiss) private var dismiss
+    @Binding var isPresented: Bool
     
     @State private var currentTab: PracticeTab = .pushUp
     @State private var isCountingDown = true
@@ -28,7 +28,7 @@ struct ExerciseContainerView: View {
                         .font(.largeTitle)
                         .bold()
                     Button("Back to main page") {
-                        dismiss()
+                        isPresented = false
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(.primaryDarkBrown)
@@ -39,7 +39,6 @@ struct ExerciseContainerView: View {
                     activeTab: currentTab,
                     onNext: moveToNextStep,
                     onDismiss: {
-                        // Pause
                         metronome.pauseMetronome()
                         showingExitDialog = true
                     }
@@ -58,11 +57,14 @@ struct ExerciseContainerView: View {
                 }
             }
         }
+        .onDisappear {
+            metronome.stopMetronome()
+        }
         .exitDialog(
             isPresented: $showingExitDialog,
             onExit: {
                 metronome.stopMetronome()
-                dismiss()
+                isPresented = false
             },
             onCancel: {
                 showingExitDialog = false

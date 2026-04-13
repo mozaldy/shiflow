@@ -64,15 +64,11 @@ struct GuitarStringRow: View {
 
             try? await Task.sleep(nanoseconds: UInt64(totalDelay * 1_000_000_000))
 
-            withAnimation(.interactiveSpring) {
                 isFlashingGreen = true
-            }
 
             try? await Task.sleep(nanoseconds: 150_000_000)
 
-            withAnimation(.easeInOut(duration: 0.2)) {
                 isFlashingGreen = false
-            }
         }
     }
 }

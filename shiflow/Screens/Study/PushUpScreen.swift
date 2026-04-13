@@ -9,13 +9,19 @@ import Foundation
 import SwiftUI
 
 struct PushUpScreen: View {
+    @Environment(MetronomeManager.self) private var metronome
     @Binding var path: NavigationPath
+    
     var title: String
     var chord: String
 
     @State private var showExitDialog = false
     @State private var showFinger = false
-    @StateObject private var beat = BeatTimer(bpm: 60)
+    var chord: String
+
+    @State private var strumTriggerA: Int = 0
+
+    let chordA = aMinor
 
     private let beatsPerBar: Int = 4
 
@@ -55,20 +61,29 @@ struct PushUpScreen: View {
 
                     VStack(spacing: 24) {
                         BeatIndicator(
-                            currentBeat: beatInBar,
-                            totalBeats: beatsPerBar,
-                            isPlaying: beat.isPlaying
+                            currentBeat: metronome.beatInBar,
+                            totalBeats: metronome.beatsPerMeasure,
+                            isPlaying: metronome.isPlaying
                         )
-                        BPMControls(beat: beat)
+                        TempoView(manager: metronome)
                     }
                 }
 
             }
             .onAppear {
-                beat.start()
+//                metronome.startBeat()
+                metronome.startMetronome()
             }
             .onDisappear {
-                beat.stop()
+//                metronome.stopBeat()
+                metronome.stopMetronome()
+            }
+            .onChange(of: metronome.beatCount) {
+                guard metronome.isFirstBeatOfBar else { return }
+                if metronome.isEvenBar {
+                    strumTriggerA += 1
+                }
+
             }
             Spacer()
 
@@ -115,6 +130,7 @@ struct PushUpScreen: View {
     PushUpScreen(
         path: .constant(NavigationPath()),
         title: "Finger Push Up",
-        chord: "Am"
+        chord: "am"
     )
+    .environment(MetronomeManager())
 }

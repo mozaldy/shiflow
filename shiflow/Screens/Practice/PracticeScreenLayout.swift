@@ -9,17 +9,16 @@ import SwiftUI
 
 struct PracticeScreenLayout<Content: View>: View {
     let activeTab: PracticeTab
-    var beat: BeatTimer?
     var onNext: () -> Void = {}
+    var onDismiss: () -> Void = {}
     @ViewBuilder let content: () -> Content
 
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
                 PracticeTabHeader(activeTab: activeTab)
-                if let beat {
-                    RepCounter(beat: beat)
-                }
+
+                RepCounter()
 
                 content()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -28,9 +27,7 @@ struct PracticeScreenLayout<Content: View>: View {
 
             VStack {
                 HStack {
-                    Button(action: onDismiss) {
-                        DissmissButton()
-                    }
+                    DissmissButton(action: onDismiss)
                     .padding(25)
                     Spacer()
                 }
@@ -51,7 +48,8 @@ struct PracticeScreenLayout<Content: View>: View {
 }
 
 #Preview{
-    PracticeScreenLayout (activeTab: .rapidFire) {
+    PracticeScreenLayout (activeTab: .pushUp) {
         Text("Hello")
     }
+    .environment(MetronomeManager())
 }

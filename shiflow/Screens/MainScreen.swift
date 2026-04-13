@@ -9,12 +9,16 @@ import SwiftUI
 
 struct MainScreen: View {
     @Environment(MetronomeManager.self) private var metronome
+    @Environment(\.dismiss) private var dismiss
         
     @State private var leftChord: Chord? = nil
     @State private var rightChord: Chord? = nil
         
     @State private var showingTempoSettings: Bool = false
     @State private var showingExercise: Bool = false
+    @State private var showingStudyChord: Bool = false
+    
+    @State private var studyPath = NavigationPath()
     
     let allChords = [aMinor, cMajor, dMajor, fMajor, eMinor, gMajor]
     
@@ -73,8 +77,10 @@ struct MainScreen: View {
                         }
                     
                     VStack(alignment: .center) {
-                        Button("",systemImage: "metronome.fill") {
+                        Button() {
                             showingTempoSettings = true
+                        } label: {
+                            Image(systemName: "metronome.fill")
                         }
                         .font(.title)
                         .buttonStyle(.glassProminent)
@@ -127,11 +133,15 @@ struct MainScreen: View {
                 }
                 
                 HStack {
-                    Button("", systemImage: "books.vertical.circle.fill") {
-                        // ke screen belajar chord
+                    Button("Study", systemImage: "books.vertical") {
+                        showingStudyChord = true
                     }
-                    .font(.title)
+                    .font(.callout)
+                    .imageScale(.large)
+                    .buttonStyle(.bordered)
                     .foregroundStyle(.primaryDarkBrown)
+                    
+                    
                     
                     Spacer()
                     
@@ -157,12 +167,19 @@ struct MainScreen: View {
                         .cornerRadius(30)
                         .shadow(radius: 20)
                 }
+            
         }
         .fullScreenCover(isPresented: $showingExercise) {
             if let left = leftChord, let right = rightChord {
-                    ExerciseContainerView(chordA: left, chordB: right)
+                    ExerciseContainerView(isPresented: $showingExercise, chordA: left, chordB: right)
                     .environment(metronome)
                 }
+        }
+        .fullScreenCover(isPresented: $showingStudyChord) {
+            NavigationStack(path: $studyPath) {
+                MainStudyScreen(path: $studyPath, selectedChord: "Am")
+                    .environment(metronome)
+            }
         }
     }
 }

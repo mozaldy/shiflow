@@ -9,35 +9,16 @@ import Foundation
 import SwiftUI
 
 struct StrumScreen: View {
+    @Environment(MetronomeManager.self) private var metronome
+    
     @Binding var path: NavigationPath
     var title: String
     var chord: String
 
     @State private var showExitDialog = false
-    @StateObject private var beat = BeatTimer(bpm: 80)
+
     @State private var strumTrigger: Int = 0
-
-    private let beatsPerBar = 4
-
-    private var beatInBar: Int {
-        ((beat.beatCount - 1) % beatsPerBar) + 1
-    }
-
-    private var isFirstBeatOfBar: Bool {
-        beatInBar == 1
-    }
-
-    var chordModel: Chord {
-        switch chord {
-        case "Am": return aMinor
-        case "C": return cMajor
-        case "D": return dMajor
-        case "F": return fMajor
-        case "Em": return eMinor
-        case "G": return gMajor
-        default: return aMinor
-        }
-    }
+    let chords = aMinor
 
     var body: some View {
         VStack {
@@ -69,7 +50,7 @@ struct StrumScreen: View {
             HStack {
                 Spacer()
                 Button {
-                    path.append("study")
+                    path = NavigationPath()
                 } label: {
                     Text("Done")
                         .font(.headline)
@@ -84,20 +65,23 @@ struct StrumScreen: View {
         .padding()
         .navigationBarBackButtonHidden(true)
         .onAppear {
-            beat.start()
+//            beat.start()
+            metronome.startMetronome()
         }
         .onDisappear {
-            beat.stop()
+//            beat.stop()
+            metronome.stopMetronome()
         }
-        .onChange(of: beat.beatCount) {
-            guard isFirstBeatOfBar else { return }
+
+        .onChange(of: metronome.beatCount) {
+            guard metronome.isFirstBeatOfBar else { return }
             strumTrigger += 1
         }
         .exitDialog(
             isPresented: $showExitDialog,
             onExit: {
                 showExitDialog = false
-                path.append("study")
+                path = NavigationPath()
             },
             onCancel: {
                 showExitDialog = false
@@ -114,4 +98,5 @@ struct StrumScreen: View {
         title: "How to Strum",
         chord: "Am"
     )
+    .environment(MetronomeManager())
 }

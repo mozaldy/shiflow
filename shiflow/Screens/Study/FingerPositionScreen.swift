@@ -100,7 +100,6 @@ struct FingerPositionScreen: View {
 #Preview {
     FingerPositionScreen(
         path: .constant(NavigationPath()),
-        title: "Finger Position",
-        chord: "Am"
+        title: "Finger Position", chord: "Am"
     )
 }

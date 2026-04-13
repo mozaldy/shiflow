@@ -9,25 +9,21 @@ import Foundation
 import SwiftUI
 
 struct MainStudyScreen: View {
+    @Environment(\.dismiss) private var dismiss
     @Binding var path: NavigationPath
     @State var selectedChord: String
-
+    
     let chords = ["Am", "C", "D", "F", "Em", "G"]
-
+    
     var body: some View {
         VStack(spacing: 20) {
             HStack {
                 Button {
-                    path = NavigationPath()
+                    dismiss()
                 } label: {
-                    Image(systemName: "arrow.backward")
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 18)
-                        .background(.brown)
-                        .foregroundStyle(.white)
-                        .clipShape(Capsule())
+                    BackButton()
                 }
-
+                
                 Picker("Chord", selection: $selectedChord) {
                     ForEach(chords, id: \.self) { chord in
                         Text(chord)
@@ -39,7 +35,7 @@ struct MainStudyScreen: View {
             }
             .padding(.top, 10)
             .padding(.leading, -75)
-
+            
             HStack(spacing: 22) {
                 ChordCard(
                     imageName: getChordImage(type: "finger"),
@@ -48,7 +44,7 @@ struct MainStudyScreen: View {
                         path.append("finger-\(selectedChord)")
                     }
                 )
-
+                
                 ChordCard(
                     imageName: getChordImage(type: "exercise"),
                     title: "Finger Push Up Exercise",
@@ -56,7 +52,7 @@ struct MainStudyScreen: View {
                         path.append("pushup-\(selectedChord)")
                     }
                 )
-
+                
                 ChordCard(
                     imageName: getChordImage(type: "strum"),
                     title: "How to Strum",
@@ -66,21 +62,34 @@ struct MainStudyScreen: View {
                 )
             }
             .frame(maxWidth: .infinity, alignment: .center)
-
+            
             Button {
                 path.append("finger")
             } label: {
                 Text("Start")
-                    .font(.headline)
-                    .padding(.horizontal, 40)
-                    .padding(.vertical, 10)
-                    .background(Color.brown)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .background(Color("PrimaryDarkBrown"))
                     .foregroundStyle(.white)
                     .clipShape(Capsule())
+                    .bold()
+                    .shadow(radius: 3)
             }
             .frame(maxWidth: .infinity, alignment: .center)
         }
         .navigationBarBackButtonHidden(true)
+        .navigationDestination(for: String.self) { value in
+            if value.contains("finger") {
+                let chord = value == "finger" ? selectedChord : value.replacingOccurrences(of: "finger-", with: "")
+                FingerPositionScreen(path: $path, title: "Finger Position", chord: chord)
+            } else if value.contains("pushup") {
+                let chord = value.replacingOccurrences(of: "pushup-", with: "")
+                PushUpScreen(path: $path, title: "Finger Push Up", chord: chord)
+            } else if value.contains("strum") {
+                let chord = value.replacingOccurrences(of: "strum-", with: "")
+                StrumScreen(path: $path, title: "How to Strum", chord: chord)
+            }
+        }
     }
 }
 

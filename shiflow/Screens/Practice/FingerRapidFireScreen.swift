@@ -9,7 +9,6 @@ import SwiftUI
 
 struct FingerRapidFireScreen: View {
     @Environment(MetronomeManager.self) private var metronome
-    @StateObject private var beat = BeatTimer(bpm: 80)
 
     @State private var strumTriggerA: Int = 0
     @State private var strumTriggerB: Int = 0
@@ -17,87 +16,52 @@ struct FingerRapidFireScreen: View {
     let chordA: Chord
     let chordB: Chord
 
-    private let beatsPerBar: Int = 4
-
-    private var barIndex: Int {
-        max(0, (metronome.beatCount - 1) / metronome.beatsPerMeasure)
-    }
-
-    private var isChordAActive: Bool {
-        barIndex % 2 == 0
-    }
-
-    private var beatInBar: Int {
-        metronome.currentBeat
-    }
-
-    private var isFirstBeatOfBar: Bool {
-        beatInBar == 1
-    }
-
-    @State private var isExerciseActive = false
 
     var body: some View {
-        ZStack {
-            PracticeScreenLayout(activeTab: .rapidFire, beat: beat) {
+        VStack {
+
+            HStack(spacing: 0) {
+                // Chord A column
+                VStack(spacing: 8) {
+                    Text(chordA.name)
+                        .font(.subheadline)
+                        .foregroundStyle(metronome.isEvenBar ? .primaryDarkBrown : .primaryLightBrown)
+                    TabsGuitar(chord: chordA, isActive: metronome.isEvenBar)
+                    StrumGuitar(chord: chordA, isActive: metronome.isEvenBar, strumTrigger: strumTriggerA, isDownStrum: metronome.barIndex % 2 == 0)
+                }
+
+                
                 VStack {
-
-                    HStack(spacing: 0) {
-                        // Chord A column
-                        VStack(spacing: 8) {
-                            Text(chordA.name)
-                                .font(.subheadline)
-                                .foregroundStyle(isChordAActive ? .primaryDarkBrown : .primaryLightBrown)
-                            TabsGuitar(chord: chordA, isActive: isChordAActive)
-                            StrumGuitar(chord: chordA, isActive: isChordAActive, strumTrigger: strumTriggerA, isDownStrum: barIndex % 2 == 0)
-                        }
-
-                        
-                        VStack {
-                        BeatIndicator(currentBeat: beatInBar, totalBeats: beatsPerBar, isPlaying: beat.isPlaying)
-                        
-                        BPMControls(beat: beat)
-                        }
-                        // Chord B column
-                        VStack(spacing: 8) {
-                            Text(chordB.name)
-                                .font(.subheadline)
-                                .foregroundStyle(!isChordAActive ? .primaryDarkBrown : .primaryLightBrown)
-                            TabsGuitar(chord: chordB, isActive: !isChordAActive)
-                            StrumGuitar(chord: chordB, isActive: !isChordAActive, strumTrigger: strumTriggerB, isDownStrum: barIndex % 2 == 0)
-                        }
-                    }
-                    .environment(\.guitarSize, .small)
-
-
+                    BeatIndicator(currentBeat: metronome.beatInBar, totalBeats: metronome.beatsPerMeasure, isPlaying: metronome.isPlaying)
+                
+                TempoView(manager: metronome)
                 }
-                .padding()
-                .onDisappear {
-                    beat.stop()
-                }
-                .onChange(of: beat.beatCount) {
-                    guard isFirstBeatOfBar else { return }
-                    if isChordAActive {
-                        strumTriggerA += 1
-                    } else {
-                        strumTriggerB += 1
-                    }
+                // Chord B column
+                VStack(spacing: 8) {
+                    Text(chordB.name)
+                        .font(.subheadline)
+                        .foregroundStyle(!metronome.isEvenBar ? .primaryDarkBrown : .primaryLightBrown)
+                    TabsGuitar(chord: chordB, isActive: !metronome.isEvenBar)
+                    StrumGuitar(chord: chordB, isActive: !metronome.isEvenBar, strumTrigger: strumTriggerB, isDownStrum: metronome.barIndex % 2 == 0)
                 }
             }
-            
-            if !isExerciseActive {
-                CountdownMessage(type: .rapidFire, tempo: beat.bpm) {
-                    withAnimation {
-                        isExerciseActive = true
-                    }
-                    beat.start()
-                }
+            .environment(\.guitarSize, .small)
+
+
+        }
+        .padding()
+        .onChange(of: metronome.beatCount) {
+            guard metronome.isFirstBeatOfBar else { return }
+            if metronome.isEvenBar {
+                strumTriggerA += 1
+            } else {
+                strumTriggerB += 1
             }
         }
     }
-
+}
 
 #Preview {
-    FingerRapidFireScreen()
-        .environmentObject(PracticeRouter())
+    FingerRapidFireScreen(chordA: aMinor, chordB: dMajor)
+        .environment(MetronomeManager())
 }

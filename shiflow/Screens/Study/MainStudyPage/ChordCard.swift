@@ -24,6 +24,7 @@ struct ChordCard: View {
 
                     Text(title)
                         .font(.subheadline)
+                        .foregroundStyle(.primaryDarkBrown)
                         .multilineTextAlignment(.center)
                 }
             }

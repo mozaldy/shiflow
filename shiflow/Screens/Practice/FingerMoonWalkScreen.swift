@@ -9,7 +9,6 @@ import SwiftUI
 
 struct FingerMoonWalkScreen: View {
     @Environment(MetronomeManager.self) private var metronome
-    @StateObject private var beat = BeatTimer(bpm: 60)
 
     @State private var strumTriggerA: Int = 0
     @State private var strumTriggerB: Int = 0
@@ -17,85 +16,46 @@ struct FingerMoonWalkScreen: View {
     let chordA: Chord
     let chordB: Chord
 
-    private let beatsPerBar: Int = 4
-
-    private var barIndex: Int {
-        max(0, (metronome.beatCount - 1) / metronome.beatsPerMeasure)
-    }
-
-    private var isChordAActive: Bool {
-        barIndex % 2 == 0
-    }
-
-    private var beatInBar: Int {
-        metronome.currentBeat
-    }
-
-    private var isFirstBeatOfBar: Bool {
-        beatInBar == 1
-    }
-
-    @EnvironmentObject private var router: PracticeRouter
-    @State private var isExerciseActive = false
-
     var body: some View {
-        ZStack {
-            PracticeScreenLayout(activeTab: .moonWalk, beat: beat, onNext: {
-                router.navigate(to: .rapidFire)
-            }) {
-                VStack(spacing: 20) {
+        VStack(spacing: 20) {
 
-                    HStack(spacing: 16) {
-                        // Chord A column
-                        VStack(spacing: 8) {
-                            Text(chordA.name)
-                                .font(.headline)
-                                .foregroundStyle(isChordAActive ? .primaryDarkBrown : .primaryLightBrown)
-                            TabsGuitar(chord: chordA, isActive: isChordAActive)
-                        }
-                        VStack(spacing: 24) {
-                            BeatIndicator(currentBeat: beatInBar, totalBeats: beatsPerBar, isPlaying: beat.isPlaying)
-                            BPMControls(beat: beat)
-                        }
-
-                        // Chord B column
-                        VStack(spacing: 8) {
-                            Text(chordB.name)
-                                .font(.headline)
-                                .foregroundStyle(!isChordAActive ? .primaryDarkBrown : .primaryLightBrown)
-                            TabsGuitar(chord: chordB, isActive: !isChordAActive)
-                        }
-                    }
-
-
+            HStack(spacing: 16) {
+                // Chord A column
+                VStack(spacing: 8) {
+                    Text(chordA.name)
+                        .font(.headline)
+                        .foregroundStyle(metronome.isEvenBar ? .primaryDarkBrown : .primaryLightBrown)
+                    TabsGuitar(chord: chordA, isActive: metronome.isEvenBar)
                 }
-                .padding()
-                .onDisappear {
-                    beat.stop()
+                VStack(spacing: 24) {
+                    BeatIndicator(currentBeat: metronome.beatInBar, totalBeats: metronome.beatsPerMeasure, isPlaying: metronome.isPlaying)
+                    TempoView(manager: metronome)
                 }
-                .onChange(of: beat.beatCount) {
-                    guard isFirstBeatOfBar else { return }
-                    if isChordAActive {
-                        strumTriggerA += 1
-                    } else {
-                        strumTriggerB += 1
-                    }
+
+                // Chord B column
+                VStack(spacing: 8) {
+                    Text(chordB.name)
+                        .font(.headline)
+                        .foregroundStyle(!metronome.isEvenBar ? .primaryDarkBrown : .primaryLightBrown)
+                    TabsGuitar(chord: chordB, isActive: !metronome.isEvenBar)
                 }
             }
-            
-            if !isExerciseActive {
-                CountdownMessage(type: .moonwalk, tempo: beat.bpm) {
-                    withAnimation {
-                        isExerciseActive = true
-                    }
-                    beat.start()
-                }
+
+
+        }
+        .padding()
+        .onChange(of: metronome.beatCount) {
+            guard metronome.isFirstBeatOfBar else { return }
+            if metronome.isEvenBar {
+                strumTriggerA += 1
+            } else {
+                strumTriggerB += 1
             }
         }
-    
+    }
 }
 
 #Preview {
-    FingerMoonWalkScreen()
-        .environmentObject(PracticeRouter())
+    FingerMoonWalkScreen(chordA: aMinor, chordB: dMajor)
+        .environment(MetronomeManager())
 }

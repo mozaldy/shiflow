@@ -8,39 +8,77 @@
 import SwiftUI
 
 struct FingerPushUpScreen: View {
-    @EnvironmentObject private var router: PracticeRouter
-    @StateObject private var beat = BeatTimer(bpm: 60)
+    @Environment(MetronomeManager.self) private var metronome
 
-    @State private var isExerciseActive = false
+    @State private var showFinger = false
+    @State private var fingerToggleTimer: Timer?
+
+    let chordA: Chord
+    let chordB: Chord
+
+    private var chordImageName: String {
+        switch chordA.id.lowercased() {
+        case "am": return "am_chord"
+        case "d": return "d_chord"
+        default: return "am_chord"
+        }
+    }
+
+    private var exerciseImageName: String {
+        switch chordA.id.lowercased() {
+        case "am": return "am_exercise"
+        case "d": return "d_exercise"
+        default: return "am_exercise"
+        }
+    }
 
     var body: some View {
-        ZStack {
-            PracticeScreenLayout(activeTab: .pushUp, beat: beat, onNext: {
-                router.navigate(to: .moonWalk)
-            }) {
-                VStack {
-                    Text("Push Up Content Goes Here")
-                        .font(.headline)
-                        .foregroundStyle(.primaryDarkBrown)
-                }
+        HStack(spacing: 16) {
+            ZStack {
+                Image(chordImageName)
+                    .resizable()
+                    .frame(width: 300, height: 200)
+                    .opacity(showFinger ? 0 : 1)
+
+                Image(exerciseImageName)
+                    .resizable()
+                    .frame(width: 300, height: 200)
+                    .opacity(showFinger ? 1 : 0)
             }
-            .onDisappear {
-                beat.stop()
-            }
-            
-            if !isExerciseActive {
-                CountdownMessage(type: .fingerPushUp, tempo: beat.bpm) {
-                    withAnimation {
-                        isExerciseActive = true
-                    }
-                    beat.start()
-                }
+
+            VStack(spacing: 24) {
+                BeatIndicator(
+                    currentBeat: metronome.beatInBar,
+                    totalBeats: metronome.beatsPerMeasure,
+                    isPlaying: metronome.isPlaying
+                )
+                TempoView(manager: metronome)
             }
         }
+        .onAppear {
+            startFingerToggleTimer()
+        }
+        .onDisappear {
+            stopFingerToggleTimer()
+        }
+    }
+
+    private func startFingerToggleTimer() {
+        fingerToggleTimer?.invalidate()
+        fingerToggleTimer = Timer.scheduledTimer(withTimeInterval: 4, repeats: true) { _ in
+            withAnimation {
+                showFinger.toggle()
+            }
+        }
+    }
+
+    private func stopFingerToggleTimer() {
+        fingerToggleTimer?.invalidate()
+        fingerToggleTimer = nil
     }
 }
 
 #Preview {
-    FingerPushUpScreen()
-        .environmentObject(PracticeRouter())
+    FingerPushUpScreen(chordA: aMinor, chordB: dMajor)
+        .environment(MetronomeManager())
 }
