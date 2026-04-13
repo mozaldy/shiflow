@@ -62,6 +62,7 @@ struct MainScreen: View {
                         }
                         .font(.title)
                         .buttonStyle(.glassProminent)
+                        .tint(.primaryDarkBrown)
                         .disabled(leftChord == nil || rightChord == nil)
 
                         Text("\(Int(metronome.tempo))")
@@ -96,7 +97,7 @@ struct MainScreen: View {
                     }
                     .font(.footnote)
                     .padding(.horizontal, 16)
-                    .padding(.vertical, 10)
+                    .padding(.vertical, 8)
                     .background(.white)
                     .foregroundStyle(.primaryDarkBrown)
                     .clipShape(Capsule())
