@@ -10,23 +10,23 @@ import SwiftUI
 
 struct StrumScreen: View {
     @Environment(MetronomeManager.self) private var metronome
-    
+
     @Binding var path: NavigationPath
+
     var title: String
     var chord: String
 
     @State private var showExitDialog = false
-
     @State private var strumTrigger: Int = 0
+
     let chords = aMinor
 
     var body: some View {
         VStack {
-
             Text(title)
                 .font(.largeTitle)
                 .bold()
-                .padding(.vertical)
+                .padding(.vertical, 15)
 
             HStack(spacing: 60) {
                 Image("\(chord.lowercased())").resizable()
@@ -37,7 +37,7 @@ struct StrumScreen: View {
                     .shadow(color: .brown.opacity(1), radius: 8)
 
                 StrumGuitar(
-                    chord: chordModel,
+                    chord: chords,
                     isActive: true,
                     strumTrigger: strumTrigger,
                     isDownStrum: true
@@ -65,11 +65,11 @@ struct StrumScreen: View {
         .padding()
         .navigationBarBackButtonHidden(true)
         .onAppear {
-//            beat.start()
+            //            beat.start()
             metronome.startMetronome()
         }
         .onDisappear {
-//            beat.stop()
+            //            beat.stop()
             metronome.stopMetronome()
         }
 
@@ -77,16 +77,6 @@ struct StrumScreen: View {
             guard metronome.isFirstBeatOfBar else { return }
             strumTrigger += 1
         }
-        .exitDialog(
-            isPresented: $showExitDialog,
-            onExit: {
-                showExitDialog = false
-                path = NavigationPath()
-            },
-            onCancel: {
-                showExitDialog = false
-            }
-        )
     }
 }
 

@@ -11,30 +11,37 @@ import SwiftUI
 struct PushUpScreen: View {
     @Environment(MetronomeManager.self) private var metronome
     @Binding var path: NavigationPath
-    
+
     var title: String
     var chord: String
+    var onDismiss: () -> Void = {}
 
     @State private var showExitDialog = false
     @State private var showFinger = false
-    var chord: String
-
     @State private var strumTriggerA: Int = 0
 
     let chordA = aMinor
 
-    private let beatsPerBar: Int = 4
-
-    private var beatInBar: Int {
-        ((beat.beatCount - 1) % beatsPerBar) + 1
-    }
-
     var body: some View {
         VStack {
-            Text(title)
-                .font(.largeTitle)
-                .bold()
-                .padding(.vertical)
+            ZStack {
+                Text(title)
+                    .font(.largeTitle)
+                    .bold()
+                    .padding(.vertical)
+
+                HStack {
+                    DissmissButton {
+                        showExitDialog = true
+                    }
+                    .padding(.leading, 40)
+
+                    Spacer()
+                }
+                .ignoresSafeArea()
+
+            }
+            .padding(.vertical, 15)
 
             VStack {
                 HStack(spacing: 16) {
@@ -71,11 +78,11 @@ struct PushUpScreen: View {
 
             }
             .onAppear {
-//                metronome.startBeat()
+                //                metronome.startBeat()
                 metronome.startMetronome()
             }
             .onDisappear {
-//                metronome.stopBeat()
+                //                metronome.stopBeat()
                 metronome.stopMetronome()
             }
             .onChange(of: metronome.beatCount) {
@@ -104,20 +111,11 @@ struct PushUpScreen: View {
         }
         .padding(.bottom)
         .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button {
-                    showExitDialog = true
-                } label: {
-                    Image(systemName: "xmark")
-                }
-            }
-        }
         .exitDialog(
             isPresented: $showExitDialog,
             onExit: {
                 showExitDialog = false
-                path.append("study")
+                path = NavigationPath()
             },
             onCancel: {
                 showExitDialog = false

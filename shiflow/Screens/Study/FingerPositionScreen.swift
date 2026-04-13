@@ -12,16 +12,30 @@ struct FingerPositionScreen: View {
 
     var title: String
     var chord: String
+    var onDismiss: () -> Void = {}
 
     @State private var showExitDialog = false
     @State private var showFinger = false
 
     var body: some View {
         VStack {
-            Text(title)
-                .font(.largeTitle)
-                .bold()
-                .padding(.vertical)
+            ZStack {
+                Text(title)
+                    .font(.largeTitle)
+                    .bold()
+                    .padding(.vertical)
+
+                HStack {
+                    DissmissButton {
+                        showExitDialog = true
+                    }
+                    .padding(.leading, 40)
+                    Spacer()
+                }
+                .ignoresSafeArea()
+
+            }
+            .padding(.vertical, 15)
 
             HStack(spacing: 60) {
                 ZStack {
@@ -67,25 +81,17 @@ struct FingerPositionScreen: View {
         }
         .padding(.bottom)
         .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button {
-                    showExitDialog = true
-                } label: {
-                    Image(systemName: "xmark")
-                }
-            }
-        }
         .exitDialog(
             isPresented: $showExitDialog,
             onExit: {
                 showExitDialog = false
-                path.append("study")
+                path = NavigationPath()
             },
             onCancel: {
                 showExitDialog = false
             }
         )
+
     }
 
     func chordImage() -> String {
@@ -100,6 +106,7 @@ struct FingerPositionScreen: View {
 #Preview {
     FingerPositionScreen(
         path: .constant(NavigationPath()),
-        title: "Finger Position", chord: "Am"
+        title: "Finger Position",
+        chord: "Am"
     )
 }
