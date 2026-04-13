@@ -63,10 +63,12 @@ struct PushUpScreen: View {
 
             }
             .onAppear {
-                metronome.startBeat()
+//                metronome.startBeat()
+                metronome.startMetronome()
             }
             .onDisappear {
-                metronome.stopBeat()
+//                metronome.stopBeat()
+                metronome.stopMetronome()
             }
             .onChange(of: metronome.beatCount) {
                 guard metronome.isFirstBeatOfBar else { return }

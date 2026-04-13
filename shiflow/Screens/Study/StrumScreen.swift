@@ -49,7 +49,7 @@ struct StrumScreen: View {
             HStack {
                 Spacer()
                 Button {
-                    path.append("study")
+                    path = NavigationPath()
                 } label: {
                     Text("Done")
                         .font(.headline)
@@ -80,7 +80,7 @@ struct StrumScreen: View {
             isPresented: $showExitDialog,
             onExit: {
                 showExitDialog = false
-                path.append("study")
+                path = NavigationPath()
             },
             onCancel: {
                 showExitDialog = false
