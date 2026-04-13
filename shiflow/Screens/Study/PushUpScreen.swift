@@ -19,103 +19,111 @@ struct PushUpScreen: View {
     @State private var showExitDialog = false
     @State private var showFinger = false
     @State private var strumTriggerA: Int = 0
+    @State private var isCountingDown = true
 
     let chordA = aMinor
 
     var body: some View {
-        VStack {
-            ZStack {
-                Text(title)
-                    .font(.largeTitle)
-                    .bold()
-                    .padding(.vertical)
-
-                HStack {
-                    DissmissButton {
-                        showExitDialog = true
-                    }
-                    .padding(.leading, 40)
-
-                    Spacer()
-                }
-                .ignoresSafeArea()
-            }
-            .padding(.vertical, 15)
-
-            HStack(spacing: 16) {
+        ZStack {
+            VStack {
                 ZStack {
-                    Image("\(chord.lowercased())_chord").resizable()
-                        .frame(width: 300, height: 200)
-                        .opacity(showFinger ? 0 : 1)
+                    Text(title)
+                        .font(.largeTitle)
+                        .bold()
+                        .padding(.vertical)
 
-                    Image("\(chord.lowercased())_exercise").resizable()
-                        .frame(width: 300, height: 200)
-                        .opacity(showFinger ? 1 : 0)
+                    HStack {
+                        DissmissButton {
+                            showExitDialog = true
+                        }
+                        .padding(.leading, 40)
+
+                        Spacer()
+                    }
+                    .ignoresSafeArea()
                 }
-                .onAppear {
-                    Timer.scheduledTimer(
-                        withTimeInterval: 4,
-                        repeats: true
-                    ) {
-                        _ in
-                        withAnimation {
-                            showFinger.toggle()
+                .padding(.vertical, 15)
+
+                HStack(spacing: 16) {
+                    ZStack {
+                        Image("\(chord.lowercased())_chord").resizable()
+                            .frame(width: 300, height: 200)
+                            .opacity(showFinger ? 0 : 1)
+
+                        Image("\(chord.lowercased())_exercise").resizable()
+                            .frame(width: 300, height: 200)
+                            .opacity(showFinger ? 1 : 0)
+                    }
+                    .onAppear {
+                        Timer.scheduledTimer(
+                            withTimeInterval: 4,
+                            repeats: true
+                        ) {
+                            _ in
+                            withAnimation {
+                                showFinger.toggle()
+                            }
                         }
                     }
+
+                    VStack(spacing: 24) {
+                        BeatIndicator(
+                            currentBeat: metronome.beatInBar,
+                            totalBeats: metronome.beatsPerMeasure,
+                            isPlaying: metronome.isPlaying
+                        )
+                        TempoView(manager: metronome)
+                    }
+
                 }
+                .onChange(of: metronome.beatCount) {
+                    guard metronome.isFirstBeatOfBar else { return }
+                    if metronome.isEvenBar {
+                        strumTriggerA += 1
+                    }
 
-                VStack(spacing: 24) {
-                    BeatIndicator(
-                        currentBeat: metronome.beatInBar,
-                        totalBeats: metronome.beatsPerMeasure,
-                        isPlaying: metronome.isPlaying
-                    )
-                    TempoView(manager: metronome)
                 }
-
-            }
-            .onAppear {
-                metronome.startMetronome()
-            }
-            .onDisappear {
-                metronome.stopMetronome()
-            }
-            .onChange(of: metronome.beatCount) {
-                guard metronome.isFirstBeatOfBar else { return }
-                if metronome.isEvenBar {
-                    strumTriggerA += 1
-                }
-
-            }
-            Spacer()
-
-            HStack {
                 Spacer()
-                Button {
-                    path.append("strum-\(chord)")
-                } label: {
-                    Text("Next")
-                        .font(.headline)
-                        .padding(.horizontal, 30)
-                        .padding(.vertical, 12)
-                        .background(Color.brown)
-                        .foregroundStyle(.white)
-                        .clipShape(Capsule())
+
+                HStack {
+                    Spacer()
+                    Button {
+                        path.append("strum-\(chord)")
+                    } label: {
+                        Text("Next")
+                            .font(.headline)
+                            .padding(.horizontal, 30)
+                            .padding(.vertical, 12)
+                            .background(Color.brown)
+                            .foregroundStyle(.white)
+                            .clipShape(Capsule())
+                    }
                 }
             }
-        }
-        .padding(.bottom)
-        .navigationBarBackButtonHidden(true)
-        .exitDialog(
-            isPresented: $showExitDialog,
-            onExit: {
-                showExitDialog = false
-                path = NavigationPath()
-            },
-            onCancel: {
-                showExitDialog = false
+            .padding(.bottom)
+            .navigationBarBackButtonHidden(true)
+            .exitDialog(
+                isPresented: $showExitDialog,
+                onExit: {
+                    showExitDialog = false
+                    path = NavigationPath()
+                },
+                onCancel: {
+                    showExitDialog = false
+                }
+            )
+            .blur(radius: isCountingDown ? 5 : 0)
+
+            if isCountingDown {
+                CountdownMessage(type: .fingerPushUp) {
+                    withAnimation {
+                        isCountingDown = false
+                    }
+                    metronome.startMetronome()
+                }
             }
-        )
+
+        }
     }
 }
 
