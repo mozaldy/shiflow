@@ -48,46 +48,12 @@ struct MainScreen: View {
                 Text("Shiflow")
                     .font(.title)
                     .bold()
-<<<<<<< HEAD
                     .padding(.top, 8)
                     .padding(.bottom, 16)
                 
                 HStack(alignment: .center ,spacing: 20){
                     MainScreenChordCard(selectedChord: $leftChord)
                     
-=======
-                    .padding(.top, 22)
-                    .padding(.bottom, 12)
-
-                HStack(alignment: .center, spacing: 20) {
-                    Button("", systemImage: "trash") {
-                        leftChord = nil
-                    }
-                    .offset(y: -90)
-                    .foregroundStyle(.primaryDarkBrown)
-                    .opacity(leftChord == nil ? 0 : 1)
-
-                    RoundedRectangle(
-                        cornerSize: CGSize(width: 30, height: 30),
-                        style: .circular
-                    )
-                    .frame(maxWidth: 250, maxHeight: 225)
-                    .foregroundStyle(.primaryLightBrown)
-                    .overlay {
-                        if let chord = leftChord {
-                            Text(chord.id)
-                                .font(.largeTitle)
-                                .fontWeight(.heavy)
-                                .foregroundStyle(.primaryDarkBrown)
-                        } else {
-                            Text("Select a chord")
-                                .font(.subheadline)
-                                .fontWeight(.regular)
-                                .foregroundStyle(.gray)
-                        }
-                    }
-
->>>>>>> main
                     VStack(alignment: .center) {
                         Button {
                             showingTempoSettings = true
@@ -104,39 +70,9 @@ struct MainScreen: View {
                         Text("BPM")
                             .font(.caption)
                     }
-<<<<<<< HEAD
                     
 
                     MainScreenChordCard(selectedChord: $rightChord)
-=======
-
-                    RoundedRectangle(
-                        cornerSize: CGSize(width: 30, height: 30),
-                        style: .circular
-                    )
-                    .frame(maxWidth: 250, maxHeight: 225)
-                    .foregroundStyle(.primaryLightBrown)
-                    .overlay {
-                        if let chord = rightChord {
-                            Text(chord.id)
-                                .font(.largeTitle)
-                                .fontWeight(.heavy)
-                                .foregroundStyle(.primaryDarkBrown)
-                        } else {
-                            Text("Select a chord")
-                                .font(.subheadline)
-                                .fontWeight(.regular)
-                                .foregroundStyle(.gray)
-                        }
-                    }
-
-                    Button("", systemImage: "trash") {
-                        rightChord = nil
-                    }
-                    .offset(y: -90)
-                    .foregroundStyle(.primaryDarkBrown)
-                    .opacity(rightChord == nil ? 0 : 1)
->>>>>>> main
                 }
                 .padding(.bottom, 16)
 
@@ -163,7 +99,6 @@ struct MainScreen: View {
                     .padding(.vertical, 10)
                     .background(.white)
                     .foregroundStyle(.primaryDarkBrown)
-<<<<<<< HEAD
                     .clipShape(Capsule())
                     .bold()
                     .overlay(
@@ -172,10 +107,6 @@ struct MainScreen: View {
                             )
 
                     
-                    
-=======
-
->>>>>>> main
                     Spacer()
 
                     PrimaryButton(
