@@ -185,7 +185,7 @@ struct TempoView: View {
                 .fontWeight(.bold)
                 .foregroundStyle(.primaryDarkBrown)
                 .multilineTextAlignment(.center)
-                .frame(width: 50)
+                .frame(minWidth: 80)
         }
         .padding(.horizontal, 30)
     }

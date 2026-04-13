@@ -39,41 +39,38 @@ struct PushUpScreen: View {
                     Spacer()
                 }
                 .ignoresSafeArea()
-
             }
             .padding(.vertical, 15)
 
-            VStack {
-                HStack(spacing: 16) {
-                    ZStack {
-                        Image("\(chord.lowercased())_chord").resizable()
-                            .frame(width: 300, height: 200)
-                            .opacity(showFinger ? 0 : 1)
+            HStack(spacing: 16) {
+                ZStack {
+                    Image("\(chord.lowercased())_chord").resizable()
+                        .frame(width: 300, height: 200)
+                        .opacity(showFinger ? 0 : 1)
 
-                        Image("\(chord.lowercased())_exercise").resizable()
-                            .frame(width: 300, height: 200)
-                            .opacity(showFinger ? 1 : 0)
-                    }
-                    .onAppear {
-                        Timer.scheduledTimer(
-                            withTimeInterval: 4,
-                            repeats: true
-                        ) {
-                            _ in
-                            withAnimation {
-                                showFinger.toggle()
-                            }
+                    Image("\(chord.lowercased())_exercise").resizable()
+                        .frame(width: 300, height: 200)
+                        .opacity(showFinger ? 1 : 0)
+                }
+                .onAppear {
+                    Timer.scheduledTimer(
+                        withTimeInterval: 4,
+                        repeats: true
+                    ) {
+                        _ in
+                        withAnimation {
+                            showFinger.toggle()
                         }
                     }
+                }
 
-                    VStack(spacing: 24) {
-                        BeatIndicator(
-                            currentBeat: metronome.beatInBar,
-                            totalBeats: metronome.beatsPerMeasure,
-                            isPlaying: metronome.isPlaying
-                        )
-                        TempoView(manager: metronome)
-                    }
+                VStack(spacing: 24) {
+                    BeatIndicator(
+                        currentBeat: metronome.beatInBar,
+                        totalBeats: metronome.beatsPerMeasure,
+                        isPlaying: metronome.isPlaying
+                    )
+                    TempoView(manager: metronome)
                 }
 
             }

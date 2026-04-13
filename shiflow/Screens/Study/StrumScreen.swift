@@ -29,7 +29,7 @@ struct StrumScreen: View {
                 .padding(.vertical, 15)
 
             HStack(spacing: 60) {
-                Image("\(chord.lowercased())").resizable()
+                Image("\(chord.lowercased())_chord").resizable()
                     .frame(width: 300, height: 200)
 
                 Divider()
