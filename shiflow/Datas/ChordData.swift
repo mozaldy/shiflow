@@ -16,7 +16,8 @@ let cMajor = Chord(name: "C Major", id: "C", placements: [
     FingerPlacement(string: .B,  fretNumber: 1, fingerNumber: 1),  // index on 2nd string, 1st fret
     FingerPlacement(string: .e1, fretNumber: 0, fingerNumber: 0),  // open
     // E6 string is muted (not played)
-], chordPairs: ["D", "Em", "Am", "G", "F"]
+], chordPairs: ["D", "Em", "Am", "G", "F"],
+                   soundFileName: "C-sound"
 )
 
 let dMajor = Chord(name: "D Major", id: "D", placements: [
@@ -25,7 +26,8 @@ let dMajor = Chord(name: "D Major", id: "D", placements: [
     FingerPlacement(string: .G,  fretNumber: 2, fingerNumber: 1),  // index on 3rd string, 2nd fret
     FingerPlacement(string: .B,  fretNumber: 3, fingerNumber: 3),  // ring on 2nd string, 3rd fret
     FingerPlacement(string: .e1, fretNumber: 2, fingerNumber: 2),  // middle on 1st string, 2nd fret
-], chordPairs: ["C", "E", "Em", "A", "Am", "G"]
+], chordPairs: ["C", "E", "Em", "A", "Am", "G"],
+                   soundFileName: "D-sound"
 )
 
 let eMajor = Chord(name: "E Major", id: "E", placements: [
@@ -35,7 +37,8 @@ let eMajor = Chord(name: "E Major", id: "E", placements: [
     FingerPlacement(string: .G,  fretNumber: 1, fingerNumber: 1),  // index on 3rd string, 1st fret
     FingerPlacement(string: .B,  fretNumber: 0, fingerNumber: 0),  // open
     FingerPlacement(string: .e1, fretNumber: 0, fingerNumber: 0),  // open
-], chordPairs: ["D", "A"]
+], chordPairs: ["D", "A"],
+                   soundFileName: ""
 )
 
 let eMinor = Chord(name: "E Minor", id: "Em", placements: [
@@ -45,7 +48,8 @@ let eMinor = Chord(name: "E Minor", id: "Em", placements: [
     FingerPlacement(string: .G,  fretNumber: 0, fingerNumber: 0),  // open
     FingerPlacement(string: .B,  fretNumber: 0, fingerNumber: 0),  // open
     FingerPlacement(string: .e1, fretNumber: 0, fingerNumber: 0),  // open
-], chordPairs: ["C", "D", "A", "Am", "G", "F"]
+], chordPairs: ["C", "D", "A", "Am", "G", "F"],
+                   soundFileName: "Em-sound"
 )
 
 let aMajor = Chord(name: "A Major", id: "A", placements: [
@@ -55,7 +59,8 @@ let aMajor = Chord(name: "A Major", id: "A", placements: [
     FingerPlacement(string: .G,  fretNumber: 2, fingerNumber: 2),  // middle on 3rd string, 2nd fret
     FingerPlacement(string: .B,  fretNumber: 2, fingerNumber: 3),  // ring on 2nd string, 2nd fret
     FingerPlacement(string: .e1, fretNumber: 0, fingerNumber: 0),  // open
-], chordPairs: ["D", "E", "Em", "G"]
+], chordPairs: ["D", "E", "Em", "G"],
+                   soundFileName: ""
 )
 
 let aMinor = Chord(name: "A Minor", id: "Am", placements: [
@@ -65,7 +70,8 @@ let aMinor = Chord(name: "A Minor", id: "Am", placements: [
     FingerPlacement(string: .G,  fretNumber: 2, fingerNumber: 3),  // ring on 3rd string, 2nd fret
     FingerPlacement(string: .B,  fretNumber: 1, fingerNumber: 1),  // index on 2nd string, 1st fret
     FingerPlacement(string: .e1, fretNumber: 0, fingerNumber: 0),  // open
-], chordPairs: ["C", "D", "E", "Em", "G", "F"]
+], chordPairs: ["C", "D", "E", "Em", "G", "F"],
+                   soundFileName: "Am-sound"
 )
 
 let gMajor = Chord(name: "G Major", id: "G", placements: [
@@ -75,7 +81,8 @@ let gMajor = Chord(name: "G Major", id: "G", placements: [
     FingerPlacement(string: .G,  fretNumber: 0, fingerNumber: 0),  // open
     FingerPlacement(string: .B,  fretNumber: 0, fingerNumber: 0),  // open
     FingerPlacement(string: .e1, fretNumber: 3, fingerNumber: 3),  // ring on 1st string, 3rd fret
-], chordPairs: ["C", "D", "Em", "A", "Am", "F"]
+], chordPairs: ["C", "D", "Em", "A", "Am", "F"],
+                   soundFileName: "G-sound"
 )
 
 let fMajor = Chord(name: "F Major", id: "F", placements: [
@@ -86,5 +93,6 @@ let fMajor = Chord(name: "F Major", id: "F", placements: [
     FingerPlacement(string: .G,  fretNumber: 2, fingerNumber: 2),  // middle on 3rd string, 2nd fret
     FingerPlacement(string: .B,  fretNumber: 1, fingerNumber: 1),  // barre (index)
     FingerPlacement(string: .e1, fretNumber: 1, fingerNumber: 1),  // barre (index)
-], chordPairs: ["C", "Em", "Am", "G"]
+], chordPairs: ["C", "Em", "Am", "G"],
+                   soundFileName: "F-sound"
 )

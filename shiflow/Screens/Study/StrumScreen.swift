@@ -14,12 +14,11 @@ struct StrumScreen: View {
     @Binding var path: NavigationPath
 
     var title: String
-    var chord: String
+    var chord: Chord
 
     @State private var showExitDialog = false
     @State private var strumTrigger: Int = 0
 
-    let chords = aMinor
 
     var body: some View {
         VStack {
@@ -29,7 +28,7 @@ struct StrumScreen: View {
                 .padding(.vertical, 15)
 
             HStack(spacing: 60) {
-                Image("\(chord.lowercased())_chord").resizable()
+                Image("\(chord.id.lowercased())_chord").resizable()
                     .frame(width: 300, height: 200)
 
                 Divider()
@@ -37,7 +36,7 @@ struct StrumScreen: View {
                     .shadow(color: .brown.opacity(1), radius: 8)
 
                 StrumGuitar(
-                    chord: chords,
+                    chord: chord,
                     isActive: true,
                     strumTrigger: strumTrigger
                 )
@@ -51,6 +50,7 @@ struct StrumScreen: View {
             }
             .onChange(of: metronome.beatCount) {
                 guard metronome.isFirstBeatOfBar else { return }
+                metronome.playChordSound(chord: chord)
                 strumTrigger += 1
             }
             
@@ -83,7 +83,7 @@ struct StrumScreen: View {
             NavigationPath()
         ),
         title: "How to Strum",
-        chord: "Am"
+        chord: aMinor
     )
     .environment(MetronomeManager())
 }

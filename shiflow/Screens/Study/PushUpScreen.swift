@@ -13,15 +13,12 @@ struct PushUpScreen: View {
     @Binding var path: NavigationPath
 
     var title: String
-    var chord: String
+    var chord: Chord
     var onDismiss: () -> Void = {}
 
     @State private var showExitDialog = false
     @State private var showFinger = false
-    @State private var strumTriggerA: Int = 0
     @State private var isCountingDown = true
-
-    let chordA = aMinor
 
     var body: some View {
         ZStack {
@@ -34,6 +31,7 @@ struct PushUpScreen: View {
 
                     HStack {
                         DissmissButton {
+                            metronome.pauseMetronome()
                             showExitDialog = true
                         }
                         .padding(.leading, 40)
@@ -46,24 +44,13 @@ struct PushUpScreen: View {
 
                 HStack(spacing: 16) {
                     ZStack {
-                        Image("\(chord.lowercased())_chord").resizable()
+                        Image("\(chord.id.lowercased())_chord").resizable()
                             .frame(width: 300, height: 200)
                             .opacity(showFinger ? 0 : 1)
 
-                        Image("\(chord.lowercased())_exercise").resizable()
+                        Image("\(chord.id.lowercased())_exercise").resizable()
                             .frame(width: 300, height: 200)
                             .opacity(showFinger ? 1 : 0)
-                    }
-                    .onAppear {
-                        Timer.scheduledTimer(
-                            withTimeInterval: 4,
-                            repeats: true
-                        ) {
-                            _ in
-                            withAnimation {
-                                showFinger.toggle()
-                            }
-                        }
                     }
 
                     VStack(spacing: 24) {
@@ -77,18 +64,19 @@ struct PushUpScreen: View {
 
                 }
                 .onChange(of: metronome.beatCount) {
-                    guard metronome.isFirstBeatOfBar else { return }
-                    if metronome.isEvenBar {
-                        strumTriggerA += 1
+                    if metronome.isFirstBeatOfBar {
+                        withAnimation {
+                            showFinger.toggle()
+                        }
                     }
-
                 }
+
                 Spacer()
 
                 HStack {
                     Spacer()
                     Button {
-                        path.append("strum-\(chord)")
+                        path.append(StudyRoute.strum(chord))
                     } label: {
                         Text("Next")
                             .font(.headline)
@@ -105,10 +93,12 @@ struct PushUpScreen: View {
             .exitDialog(
                 isPresented: $showExitDialog,
                 onExit: {
+                    metronome.stopMetronome()
                     showExitDialog = false
                     path = NavigationPath()
                 },
                 onCancel: {
+                    metronome.startMetronome()
                     showExitDialog = false
                 }
             )
@@ -131,7 +121,7 @@ struct PushUpScreen: View {
     PushUpScreen(
         path: .constant(NavigationPath()),
         title: "Finger Push Up",
-        chord: "am"
+        chord: aMinor
     )
     .environment(MetronomeManager())
 }
