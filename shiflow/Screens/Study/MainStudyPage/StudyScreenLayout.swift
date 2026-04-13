@@ -8,12 +8,18 @@
 import Foundation
 import SwiftUI
 
+enum StudyRoute: Hashable {
+    case finger(Chord)
+    case pushup(Chord)
+    case strum(Chord)
+}
+
 struct MainStudyScreen: View {
     @Environment(\.dismiss) private var dismiss
     @Binding var path: NavigationPath
-    @State var selectedChord: String
+    @State var selectedChord: Chord
 
-    let chords = ["Am", "C", "D", "F", "Em", "G"]
+    let chords = [aMinor, cMajor, dMajor, fMajor, eMinor, gMajor]
 
     var body: some View {
         VStack(spacing: 20) {
@@ -26,7 +32,7 @@ struct MainStudyScreen: View {
 
                 Picker("Chord", selection: $selectedChord) {
                     ForEach(chords, id: \.self) { chord in
-                        Text(chord)
+                        Text(chord.id).tag(chord)
                     }
                 }
                 .pickerStyle(.segmented)
@@ -41,7 +47,7 @@ struct MainStudyScreen: View {
                     imageName: getChordImage(type: "finger"),
                     title: "Finger Position",
                     action: {
-                        path.append("finger-\(selectedChord)")
+                        path.append(StudyRoute.finger(selectedChord))
                     }
                 )
 
@@ -49,7 +55,7 @@ struct MainStudyScreen: View {
                     imageName: getChordImage(type: "exercise"),
                     title: "Finger Push Up Exercise",
                     action: {
-                        path.append("pushup-\(selectedChord)")
+                        path.append(StudyRoute.pushup(selectedChord))
                     }
                 )
 
@@ -57,14 +63,14 @@ struct MainStudyScreen: View {
                     imageName: getChordImage(type: "strum"),
                     title: "How to Strum",
                     action: {
-                        path.append("strum-\(selectedChord)")
+                        path.append(StudyRoute.strum(selectedChord))
                     }
                 )
             }
             .frame(maxWidth: .infinity, alignment: .center)
 
             Button {
-                path.append("finger")
+                path.append(StudyRoute.finger(selectedChord))
             } label: {
                 Text("Start")
                     .padding(.horizontal, 16)
@@ -78,23 +84,26 @@ struct MainStudyScreen: View {
             .frame(maxWidth: .infinity, alignment: .center)
         }
         .navigationBarBackButtonHidden(true)
-        .navigationDestination(for: String.self) { value in
-            if value.contains("finger") {
-                let chord =
-                    value == "finger"
-                    ? selectedChord
-                    : value.replacingOccurrences(of: "finger-", with: "")
+        .navigationDestination(for: StudyRoute.self) { route in
+            switch route {
+            case .finger(let chord):
                 FingerPositionScreen(
                     path: $path,
                     title: "Finger Position",
                     chord: chord
                 )
-            } else if value.contains("pushup") {
-                let chord = value.replacingOccurrences(of: "pushup-", with: "")
-                PushUpScreen(path: $path, title: "Finger Push Up", chord: chord)
-            } else if value.contains("strum") {
-                let chord = value.replacingOccurrences(of: "strum-", with: "")
-                StrumScreen(path: $path, title: "How to Strum", chord: chord)
+            case .pushup(let chord):
+                PushUpScreen(
+                    path: $path,
+                    title: "Finger Push Up",
+                    chord: chord
+                )
+            case .strum(let chord):
+                StrumScreen(
+                    path: $path,
+                    title: "How to Strum",
+                    chord: chord
+                )
             }
         }
     }
@@ -104,7 +113,7 @@ struct MainStudyScreen: View {
     NavigationStack {
         MainStudyScreen(
             path: .constant(NavigationPath()),
-            selectedChord: "Am"
+            selectedChord: aMinor
         )
     }
 }

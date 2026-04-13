@@ -11,7 +11,6 @@ struct FingerPushUpScreen: View {
     @Environment(MetronomeManager.self) private var metronome
 
     @State private var showFinger = false
-//    @State private var fingerToggleTimer: Timer?
 
     let chordA: Chord
     let chordB: Chord
@@ -57,7 +56,9 @@ struct FingerPushUpScreen: View {
         }
         .onChange(of: metronome.beatCount) {
             if metronome.isFirstBeatOfBar {
-                showFinger.toggle()
+                withAnimation {
+                    showFinger.toggle()
+                }
             }
         }
     }

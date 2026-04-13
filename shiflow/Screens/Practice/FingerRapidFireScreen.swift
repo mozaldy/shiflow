@@ -16,7 +16,6 @@ struct FingerRapidFireScreen: View {
     let chordA: Chord
     let chordB: Chord
 
-
     var body: some View {
         VStack {
 
@@ -53,8 +52,10 @@ struct FingerRapidFireScreen: View {
         .onChange(of: metronome.beatCount) {
             guard metronome.isFirstBeatOfBar else { return }
             if metronome.isEvenBar {
+                metronome.playChordSound(chord: chordA)
                 strumTriggerA += 1
             } else {
+                metronome.playChordSound(chord: chordB)
                 strumTriggerB += 1
             }
         }

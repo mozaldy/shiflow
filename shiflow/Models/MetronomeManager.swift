@@ -45,6 +45,8 @@ class MetronomeManager {
     private var beatPlayer: AVAudioPlayer?
     private var debounceTask: Task<Void, Never>? = nil
     
+    private var chordPlayerCache: [String: AVAudioPlayer] = [:]
+    
     init() {
         setupAudioPlayer()
     }
@@ -178,6 +180,30 @@ class MetronomeManager {
         timer = nil
         isPlaying = false
         pauseBeat()
+    }
+    
+    func playChordSound(chord: Chord) {
+        let fileName = chord.soundFileName
+        
+        if let player = chordPlayerCache[fileName] {
+            player.currentTime = 0
+            player.play()
+            return
+        }
+        
+        guard let url = Bundle.main.url(forResource: fileName, withExtension: "wav") else {
+            print("Chord sound \(fileName).wav not found")
+            return
+        }
+        
+        do {
+            let player = try AVAudioPlayer(contentsOf: url)
+            player.prepareToPlay()
+            player.play()
+            chordPlayerCache[fileName] = player
+        } catch {
+            print("Could not play chord: \(error)")
+        }
     }
     
 }

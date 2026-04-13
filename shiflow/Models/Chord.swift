@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum GuitarString: String, CaseIterable {
+enum GuitarString: String, CaseIterable, Hashable {
     case E6 = "E"   // 6th string (low E, thickest)
     case A  = "A"   // 5th string
     case D  = "D"   // 4th string
@@ -28,17 +28,18 @@ enum GuitarString: String, CaseIterable {
 }
 
 
-struct FingerPlacement {
+struct FingerPlacement: Hashable {
     var string: GuitarString
     var fretNumber: Int
     var fingerNumber: Int  // 1=index, 2=middle, 3=ring, 4=pinky, 0=open, -1=muted
 }
 
-struct Chord {
+struct Chord: Identifiable, Hashable {
     var name: String
     var id: String
     var placements: [FingerPlacement]
     var chordPairs: [String] = []
+    var soundFileName: String
     
     func getFingerNumber(string: GuitarString, fret: Int) -> Int? {
         let matchingElement: FingerPlacement? = placements.first { p in

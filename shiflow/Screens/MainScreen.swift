@@ -88,6 +88,7 @@ struct MainScreen: View {
                             } else if rightChord == nil {
                                 rightChord = chord
                             }
+                            metronome.playChordSound(chord: chord)
                         }
                     }
                 }
@@ -148,7 +149,7 @@ struct MainScreen: View {
         }
         .fullScreenCover(isPresented: $showingStudyChord) {
             NavigationStack(path: $studyPath) {
-                MainStudyScreen(path: $studyPath, selectedChord: "Am")
+                MainStudyScreen(path: $studyPath, selectedChord: aMinor)
                     .environment(metronome)
             }
         }

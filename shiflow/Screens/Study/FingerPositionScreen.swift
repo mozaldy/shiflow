@@ -11,7 +11,7 @@ struct FingerPositionScreen: View {
     @Binding var path: NavigationPath
 
     var title: String
-    var chord: String
+    var chord: Chord
     var onDismiss: () -> Void = {}
 
     @State private var showExitDialog = false
@@ -39,11 +39,11 @@ struct FingerPositionScreen: View {
 
             HStack(spacing: 60) {
                 ZStack {
-                    Image("\(chord.lowercased())_chord").resizable()
+                    Image("\(chord.id.lowercased())_chord").resizable()
                         .frame(width: 300, height: 200)
                         .opacity(showFinger ? 0 : 1)
 
-                    Image("\(chord.lowercased())_exercise").resizable()
+                    Image("\(chord.id.lowercased())_exercise").resizable()
                         .frame(width: 300, height: 200)
                         .opacity(showFinger ? 1 : 0)
                 }
@@ -67,7 +67,7 @@ struct FingerPositionScreen: View {
             HStack {
                 Spacer()
                 Button {
-                    path.append("pushup-\(chord)")
+                    path.append(StudyRoute.pushup(chord))
                 } label: {
                     Text("Next")
                         .font(.headline)
@@ -95,11 +95,11 @@ struct FingerPositionScreen: View {
     }
 
     func chordImage() -> String {
-        return title.lowercased()
+        return chord.id.lowercased()
     }
 
     func exerciseImage() -> String {
-        return "\(title.lowercased())_exercise"
+        return "\(chord.id.lowercased())_exercise"
     }
 }
 
@@ -107,6 +107,6 @@ struct FingerPositionScreen: View {
     FingerPositionScreen(
         path: .constant(NavigationPath()),
         title: "Finger Position",
-        chord: "Am"
+        chord: aMinor
     )
 }
