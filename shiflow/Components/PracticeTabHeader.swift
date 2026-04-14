@@ -1,7 +1,8 @@
 import SwiftUI
 
 enum PracticeTab: String, CaseIterable {
-    case pushUp = "Push Up"
+    case pushUp1 = "Push Up 1"
+    case pushUp2 = "Push Up 2"
     case moonWalk = "Moon Walk"
     case rapidFire = "Rapid Fire"
 }
@@ -31,7 +32,8 @@ struct PracticeTabHeader: View {
 
 #Preview {
     VStack {
-        PracticeTabHeader(activeTab: .pushUp)
+        PracticeTabHeader(activeTab: .pushUp1)
+        PracticeTabHeader(activeTab: .pushUp2)
         PracticeTabHeader(activeTab: .moonWalk)
         PracticeTabHeader(activeTab: .rapidFire)
     }

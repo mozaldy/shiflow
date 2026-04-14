@@ -2,7 +2,7 @@ import SwiftUI
 internal import Combine
 
 class PracticeRouter: ObservableObject {
-    @Published var activeTab: PracticeTab = .pushUp
+    @Published var activeTab: PracticeTab = .pushUp1
     @Published var isPracticing: Bool = false
     
     func navigate(to destination: PracticeTab) {
@@ -12,7 +12,7 @@ class PracticeRouter: ObservableObject {
     }
     
     func startPractice() {
-        activeTab = .pushUp
+        activeTab = .pushUp1
         isPracticing = true
     }
 }

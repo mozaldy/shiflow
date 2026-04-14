@@ -48,7 +48,7 @@ struct PracticeScreenLayout<Content: View>: View {
 }
 
 #Preview{
-    PracticeScreenLayout (activeTab: .pushUp) {
+    PracticeScreenLayout (activeTab: .pushUp1) {
         Text("Hello")
     }
     .environment(MetronomeManager())

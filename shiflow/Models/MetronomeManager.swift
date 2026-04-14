@@ -11,42 +11,41 @@ import AVFoundation
 
 @Observable
 class MetronomeManager {
+    // MARK: metronome native variables
     var tempo: Double = 90.0
     var beatsPerMeasure: Int = 4
     var currentBeat: Int = 0
     var beatCount: Int = 0
     
-    private var isMetronomeOnly: Bool = false
-    
-    let originalBeatBpm: Double = 115.0
-    
+    // MARK: metronome measure variables
     var isPlaying: Bool = false
-    
     var barIndex: Int {
         max(0, (self.beatCount - 1) / self.beatsPerMeasure)
     }
-    
     var beatInBar: Int {
         guard self.beatCount > 0 else { return 0 }
         return ((self.beatCount - 1) % self.beatsPerMeasure) + 1
     }
-    
     var isFirstBeatOfBar: Bool {
         beatInBar == 1
     }
-    
     var isEvenBar: Bool {
         barIndex % 2 == 0
     }
+    let originalBeatBpm: Double = 115.0
     
+    // MARK: private variables
+    private var isMetronomeOnly: Bool = false
     private var timer: Timer?
     private var highTickPlayer: AVAudioPlayer?
     private var lowTickPlayer: AVAudioPlayer?
-    private var beatPlayer: AVAudioPlayer?
     private var debounceTask: Task<Void, Never>? = nil
-    
+    // MARK: beat variables
+    private var beatPlayer: AVAudioPlayer?
     private var chordPlayerCache: [String: AVAudioPlayer] = [:]
     
+    
+    // MARK: setup function
     init() {
         setupAudioPlayer()
     }
@@ -80,6 +79,7 @@ class MetronomeManager {
         }
     }
     
+    // MARK: metronome and beat (both) playing function
     func startMetronome() {
         isMetronomeOnly = false
         stopMetronome()
@@ -89,31 +89,6 @@ class MetronomeManager {
             self.playTick()
         }
         isPlaying = true
-    }
-    
-    func startMetronomeOnly() {
-        isMetronomeOnly = true
-        stopMetronome()
-        let interval = 60.0/tempo
-        
-        timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { _ in
-            self.playTick()
-        }
-        isPlaying = true
-    }
-    
-    func startBeat() {
-        beatPlayer?.currentTime = 0
-        beatPlayer?.play()
-    }
-    
-    func stopBeat() {
-        beatPlayer?.stop()
-        beatPlayer?.currentTime = 0
-    }
-    
-    func pauseBeat() {
-        beatPlayer?.pause()
     }
     
     private func playTick() {
@@ -182,6 +157,35 @@ class MetronomeManager {
         pauseBeat()
     }
     
+    // MARK: Metronome only function
+    func startMetronomeOnly() {
+        isMetronomeOnly = true
+        stopMetronome()
+        let interval = 60.0/tempo
+        
+        timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { _ in
+            self.playTick()
+        }
+        isPlaying = true
+    }
+    
+    // MARK: Beat only function
+    func startBeat() {
+        beatPlayer?.currentTime = 0
+        beatPlayer?.play()
+    }
+    
+    func stopBeat() {
+        beatPlayer?.stop()
+        beatPlayer?.currentTime = 0
+    }
+    
+    func pauseBeat() {
+        beatPlayer?.pause()
+    }
+    
+
+    // MARK: Play chord sound
     func playChordSound(chord: Chord) {
         let fileName = chord.soundFileName
         
@@ -206,8 +210,14 @@ class MetronomeManager {
         }
     }
     
+    // MARK: Mute function
+    func muteMetronome() {
+        
+    }
+    
 }
 
+// MARK: BPM text view
 struct TempoView: View {
     var manager: MetronomeManager
     
@@ -224,6 +234,7 @@ struct TempoView: View {
     }
 }
 
+// MARK: Tempo visualization view
 struct BeatIndicator: View {
     let currentBeat: Int
     let totalBeats: Int
