@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct PracticeScreenLayout<Content: View>: View {
+    @Environment(MetronomeManager.self) private var metronome
+    
     let activeTab: PracticeTab
     var onNext: () -> Void = {}
     var onDismiss: () -> Void = {}
@@ -39,7 +41,10 @@ struct PracticeScreenLayout<Content: View>: View {
                 Spacer()
                 HStack {
                     Spacer()
-                    NextButton(action: onNext).padding(25)
+                    NextButton(
+                        action: onNext,
+                        isDisabled: metronome.beatCount < (metronome.beatsPerMeasure * 5)
+                    ).padding(25)
                 }
             }
             .ignoresSafeArea()
