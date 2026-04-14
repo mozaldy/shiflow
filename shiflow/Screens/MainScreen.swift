@@ -42,7 +42,9 @@ struct MainScreen: View {
     var body: some View {
         ZStack {
             // Kalau mau taruh background
-            // Color.white.ignoresSafeArea()
+            Image("background")
+                .rotationEffect(Angle(degrees: 90))
+                .opacity(0)
 
             VStack(spacing: 0) {
                 Text("Shiflow")
@@ -72,7 +74,6 @@ struct MainScreen: View {
                             .font(.caption)
                     }
                     
-
                     MainScreenChordCard(selectedChord: $rightChord)
                 }
                 .padding(.bottom, 16)
@@ -94,7 +95,9 @@ struct MainScreen: View {
                 }
 
                 HStack {
-                    Button("Study", systemImage: "books.vertical") { showingStudyChord = true
+                    Button("Study", systemImage: "books.vertical") {
+                        metronome.updateTempo(to: 90.0)
+                        showingStudyChord = true
                     }
                     .font(.footnote)
                     .padding(.horizontal, 16)
