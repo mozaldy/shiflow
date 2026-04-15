@@ -42,43 +42,17 @@ struct MainScreen: View {
     var body: some View {
         ZStack {
             // Kalau mau taruh background
-            // Color.white.ignoresSafeArea()
 
             VStack(spacing: 0) {
                 Text("Shiflow")
                     .font(.title)
                     .bold()
-                    .padding(.top, 22)
-                    .padding(.bottom, 12)
-
-                HStack(alignment: .center, spacing: 20) {
-                    Button("", systemImage: "trash") {
-                        leftChord = nil
-                    }
-                    .offset(y: -90)
-                    .foregroundStyle(.primaryDarkBrown)
-                    .opacity(leftChord == nil ? 0 : 1)
-
-                    RoundedRectangle(
-                        cornerSize: CGSize(width: 30, height: 30),
-                        style: .circular
-                    )
-                    .frame(maxWidth: 250, maxHeight: 225)
-                    .foregroundStyle(.primaryLightBrown)
-                    .overlay {
-                        if let chord = leftChord {
-                            Text(chord.id)
-                                .font(.largeTitle)
-                                .fontWeight(.heavy)
-                                .foregroundStyle(.primaryDarkBrown)
-                        } else {
-                            Text("Select a chord")
-                                .font(.subheadline)
-                                .fontWeight(.regular)
-                                .foregroundStyle(.gray)
-                        }
-                    }
-
+                    .padding(.top, 8)
+                    .padding(.bottom, 16)
+                
+                HStack(alignment: .center ,spacing: 20){
+                    MainScreenChordCard(selectedChord: $leftChord)
+                    
                     VStack(alignment: .center) {
                         Button {
                             showingTempoSettings = true
@@ -87,6 +61,7 @@ struct MainScreen: View {
                         }
                         .font(.title)
                         .buttonStyle(.glassProminent)
+                        .tint(.primaryDarkBrown)
                         .disabled(leftChord == nil || rightChord == nil)
 
                         Text("\(Int(metronome.tempo))")
@@ -95,33 +70,8 @@ struct MainScreen: View {
                         Text("BPM")
                             .font(.caption)
                     }
-
-                    RoundedRectangle(
-                        cornerSize: CGSize(width: 30, height: 30),
-                        style: .circular
-                    )
-                    .frame(maxWidth: 250, maxHeight: 225)
-                    .foregroundStyle(.primaryLightBrown)
-                    .overlay {
-                        if let chord = rightChord {
-                            Text(chord.id)
-                                .font(.largeTitle)
-                                .fontWeight(.heavy)
-                                .foregroundStyle(.primaryDarkBrown)
-                        } else {
-                            Text("Select a chord")
-                                .font(.subheadline)
-                                .fontWeight(.regular)
-                                .foregroundStyle(.gray)
-                        }
-                    }
-
-                    Button("", systemImage: "trash") {
-                        rightChord = nil
-                    }
-                    .offset(y: -90)
-                    .foregroundStyle(.primaryDarkBrown)
-                    .opacity(rightChord == nil ? 0 : 1)
+                    
+                    MainScreenChordCard(selectedChord: $rightChord)
                 }
                 .padding(.bottom, 16)
 
@@ -136,19 +86,29 @@ struct MainScreen: View {
                             } else if rightChord == nil {
                                 rightChord = chord
                             }
+                            metronome.playChordSound(chord: chord)
                         }
                     }
                 }
 
                 HStack {
                     Button("Study", systemImage: "books.vertical") {
+                        metronome.updateTempo(to: 90.0)
                         showingStudyChord = true
                     }
-                    .font(.callout)
-                    .imageScale(.large)
-                    .buttonStyle(.bordered)
+                    .font(.footnote)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .background(.white)
                     .foregroundStyle(.primaryDarkBrown)
+                    .clipShape(Capsule())
+                    .bold()
+                    .overlay(
+                                Capsule()
+                                    .stroke(Color.primaryDarkBrown, lineWidth: 2)
+                            )
 
+                    
                     Spacer()
 
                     PrimaryButton(
@@ -189,10 +149,15 @@ struct MainScreen: View {
         }
         .fullScreenCover(isPresented: $showingStudyChord) {
             NavigationStack(path: $studyPath) {
-                MainStudyScreen(path: $studyPath, selectedChord: "Am")
+                MainStudyScreen(path: $studyPath, selectedChord: aMinor)
                     .environment(metronome)
             }
         }
+        .background(
+            Image("background")
+                .rotationEffect(Angle(degrees: 90))
+                .opacity(1)
+        )
     }
 }
 

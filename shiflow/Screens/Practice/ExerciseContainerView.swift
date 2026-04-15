@@ -12,7 +12,7 @@ struct ExerciseContainerView: View {
     @Environment(MetronomeManager.self) private var metronome
     @Binding var isPresented: Bool
     
-    @State private var currentTab: PracticeTab = .pushUp
+    @State private var currentTab: PracticeTab = .pushUp1
     @State private var isCountingDown = true
     @State private var isFinished = false
     @State private var showingExitDialog = false
@@ -24,7 +24,7 @@ struct ExerciseContainerView: View {
         ZStack {
             if isFinished {
                 VStack(spacing: 20) {
-                    Text("Well Done! 🎉")
+                    Text("Well Done!")
                         .font(.largeTitle)
                         .bold()
                     Button("Back to main page") {
@@ -70,6 +70,10 @@ struct ExerciseContainerView: View {
                 showingExitDialog = false
                 metronome.startMetronome()
             })
+//        .background(
+//            Image("background")
+//                .rotationEffect(Angle(degrees: 90))
+//        )
     }
         
     
@@ -81,7 +85,8 @@ struct ExerciseContainerView: View {
     
     private func getExerciseType(for step: PracticeTab) -> ExerciseType {
         switch step {
-        case .pushUp: return .fingerPushUp
+        case .pushUp1: return .fingerPushUp
+        case .pushUp2: return .fingerPushUp
         case .moonWalk: return .moonwalk
         case .rapidFire: return .rapidFire
         }
@@ -108,8 +113,11 @@ struct ExerciseContainerView: View {
     @ViewBuilder
     private func displayContent(for tab: PracticeTab) -> some View {
         switch tab {
-        case .pushUp:
-            FingerPushUpScreen(chordA: chordA, chordB: chordB)
+        case .pushUp1:
+            FingerPushUpScreen(chord: chordA)
+            
+        case .pushUp2:
+            FingerPushUpScreen(chord: chordB)
             
         case .moonWalk:
             FingerMoonWalkScreen(chordA: chordA, chordB: chordB)
@@ -118,4 +126,8 @@ struct ExerciseContainerView: View {
             FingerRapidFireScreen(chordA: chordA, chordB: chordB)
         }
     }
+}
+
+#Preview {
+    
 }

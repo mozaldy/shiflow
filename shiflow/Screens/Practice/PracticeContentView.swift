@@ -33,8 +33,10 @@ struct PracticeFlowContainer: View {
     var body: some View {
         Group {
             switch router.activeTab {
-            case .pushUp:
-                FingerPushUpScreen(chordA: aMinor, chordB: dMajor)
+            case .pushUp1:
+                FingerPushUpScreen(chord: aMinor)
+            case .pushUp2:
+                FingerPushUpScreen(chord: aMinor)
             case .moonWalk:
                 FingerMoonWalkScreen(chordA: aMinor, chordB: dMajor)
             case .rapidFire:

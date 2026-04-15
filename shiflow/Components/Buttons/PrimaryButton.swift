@@ -17,13 +17,11 @@ struct PrimaryButton: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
-        .background(isDisabled ? Color.gray : Color("PrimaryDarkBrown"))
         .foregroundStyle(.white)
-        .clipShape(Capsule())
+        .buttonStyle(.glassProminent)
+        .tint(.primaryDarkBrown)
         .bold()
-        .opacity(isDisabled ? 0.5 : 1.0)
         .disabled(isDisabled)
-        .shadow(radius: 3)
     }
 }
 
