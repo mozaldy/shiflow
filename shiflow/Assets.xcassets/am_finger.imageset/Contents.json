@@ -1,17 +1,8 @@
 {
   "images" : [
     {
-      "filename" : "am_finger.png",
-      "idiom" : "universal",
-      "scale" : "1x"
-    },
-    {
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "idiom" : "universal",
-      "scale" : "3x"
+      "filename" : "am_finger.pdf",
+      "idiom" : "universal"
     }
   ],
   "info" : {
