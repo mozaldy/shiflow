@@ -24,7 +24,7 @@ struct ExerciseContainerView: View {
         ZStack {
             if isFinished {
                 VStack(spacing: 20) {
-                    Text("Well Done! 🎉")
+                    Text("Well Done!")
                         .font(.largeTitle)
                         .bold()
                     Button("Back to main page") {
@@ -70,6 +70,10 @@ struct ExerciseContainerView: View {
                 showingExitDialog = false
                 metronome.startMetronome()
             })
+//        .background(
+//            Image("background")
+//                .rotationEffect(Angle(degrees: 90))
+//        )
     }
         
     
@@ -122,4 +126,8 @@ struct ExerciseContainerView: View {
             FingerRapidFireScreen(chordA: chordA, chordB: chordB)
         }
     }
+}
+
+#Preview {
+    
 }

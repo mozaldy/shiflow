@@ -14,7 +14,8 @@ struct MainScreenChordCard: View {
     var body: some View {
         RoundedRectangle(cornerSize: CGSize(width: 30, height: 30), style: .circular)
             .frame(maxWidth: 250, maxHeight: 225)
-            .foregroundStyle(.primaryLightBrown)
+            .foregroundStyle(.primaryWhite)
+            .shadow(radius: 5)
             .overlay {
                 if let chord = selectedChord {
                     Text(chord.id)

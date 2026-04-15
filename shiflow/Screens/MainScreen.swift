@@ -42,9 +42,6 @@ struct MainScreen: View {
     var body: some View {
         ZStack {
             // Kalau mau taruh background
-            Image("background")
-                .rotationEffect(Angle(degrees: 90))
-                .opacity(0)
 
             VStack(spacing: 0) {
                 Text("Shiflow")
@@ -156,6 +153,11 @@ struct MainScreen: View {
                     .environment(metronome)
             }
         }
+        .background(
+            Image("background")
+                .rotationEffect(Angle(degrees: 90))
+                .opacity(1)
+        )
     }
 }
 
