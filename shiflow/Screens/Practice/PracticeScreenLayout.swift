@@ -49,6 +49,7 @@ struct PracticeScreenLayout<Content: View>: View {
             }
             .ignoresSafeArea()
         }
+        
     }
 }
 
